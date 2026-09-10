@@ -1,7 +1,7 @@
 {
-  "name": "cli-calendar",
+  "name": "@nazozokc-prod/cli-calendar",
   "module": "src/index.ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "bin": {
     "cli-calendar": "dist/index.mjs"
