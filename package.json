@@ -1,7 +1,11 @@
 {
   "name": "cli-calendar",
   "module": "src/index.ts",
+  "version": "0.1.0"
   "type": "module",
+  "bin": {
+    "cli-calendar": "dist/index.mjs"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
