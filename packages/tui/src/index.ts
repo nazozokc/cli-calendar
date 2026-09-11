@@ -1,5 +1,9 @@
 export {
+  clampCursor,
   clearSelection,
+  findDateCell,
+  findFirstDayCell,
+  findTodayCell,
   getCursorDate,
   getSelectedDate,
   moveCursor,
