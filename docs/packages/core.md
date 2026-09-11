@@ -19,8 +19,10 @@ bun add @typescript-calendar/core
 ### `Locale`
 
 ```ts
-type Locale = "en" | "ja";
+type Locale = "en" | "ja" | "es" | "de" | "fr" | "ko" | "zh";
 ```
+
+English, Japanese, Spanish, German, French, Korean, and Chinese (Simplified).
 
 ### `WeekStart`
 
