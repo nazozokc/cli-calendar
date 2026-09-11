@@ -14,6 +14,16 @@ describe("parseDate", () => {
     expect(parseDate("2026-09-32")).toBeNull();
   });
 
+  test("月の長さを超える日付は null", () => {
+    expect(parseDate("2026-02-30")).toBeNull();
+    expect(parseDate("2026-04-31")).toBeNull();
+    expect(parseDate("2025-02-29")).toBeNull(); // 平年の2月29日
+  });
+
+  test("うるう年の2月29日は有効", () => {
+    expect(parseDate("2024-02-29")).toEqual(new Date(2024, 1, 29));
+  });
+
   test("形式が不正なら null", () => {
     expect(parseDate("2026/09/08")).toBeNull();
     expect(parseDate("2026-9-8")).toBeNull();

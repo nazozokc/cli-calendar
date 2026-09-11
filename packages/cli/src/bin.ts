@@ -46,7 +46,14 @@ export function parseDate(value: string): Date | null {
   const day = Number(match[3]);
   if (month < 1 || month > 12) return null;
   if (day < 1 || day > 31) return null;
-  return new Date(year, month - 1, day);
+  const date = new Date(year, month - 1, day);
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  )
+    return null;
+  return date;
 }
 
 /** 指定した候補リストに値が含まれるか検証する */
