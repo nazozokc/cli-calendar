@@ -54,7 +54,7 @@ state = navigateMonth(state, "next");     // → また新しい状態
 
 ## Layer 3: cli — テキスト出力
 
-`cli` は `core` + `tui` のロジックを**プレーンテキスト**として出力します。
+`cli` は `core` のロジックを**プレーンテキスト**として出力します。
 
 - `calendar()` — 単月
 - `calendarYear()` — 年間（4列×3行）

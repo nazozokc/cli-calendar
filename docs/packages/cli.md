@@ -77,7 +77,7 @@ typescript-calendar 2026 9                # September 2026
 --theme <name>           Look: default | modern (default: default)
 --color-scheme <name>    Colors: default | ocean | forest | sunset | mono
 --color                  Enable ANSI colors
---locale <lang>          Language: en | ja (default: en)
+--locale <lang>          Language: en | ja | es | de | fr | ko | zh (default: en)
 --week-start <day>       First weekday: sunday | monday (default: sunday)
 --highlight <YYYY-MM-DD> Highlight a date (e.g. 2026-09-08)
 --highlight-style <style> Highlight style: bracket | reverse (default: bracket)
