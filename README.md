@@ -5,10 +5,12 @@ A calendar library written in TypeScript. Render month, year, or arbitrary date-
 ## Features
 
 - **Month / Year / Range** — render a single month, a full year (4 columns × 3 rows), or any date range
-- **Bilingual** — English and Japanese locales
+- **Bilingual** — English, Japanese, Spanish, German, French, Korean, Chinese (Simplified) locales
 - **Week start** — Sunday or Monday
 - **Highlight today** — bracket (`[8]`) or reverse-video styles
 - **Color ranges** — highlight specific dates with range coloring (opt-in)
+- **Interactive React** — `useCalendarState` hook + clickable/keyboard cells
+- **Headless TUI state** — cursor, selection, and navigation state machine for any TUI framework
 - **Zero runtime dependencies** — plain text by default; ANSI colors only when enabled
 
 ## Install
@@ -59,7 +61,7 @@ Render a single month.
 | :--- | :--- | :--- | :--- |
 | `year` | `number` | — | Calendar year (e.g. `2026`) |
 | `month` | `number` | — | Month, 1-indexed (`1`–`12`) |
-| `locale` | `"en" \| "ja"` | `"en"` | Language |
+| `locale` | `"en" \| "ja" \| "es" \| "de" \| "fr" \| "ko" \| "zh"` | `"en"` | Language |
 | `weekStart` | `"sunday" \| "monday"` | `"sunday"` | First day of the week |
 | `highlight` | `Date` | — | Date to highlight (e.g. today) |
 | `highlightStyle` | `"bracket" \| "reverse"` | `"bracket"` | Highlight appearance |
