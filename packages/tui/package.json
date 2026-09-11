@@ -1,9 +1,27 @@
 {
   "name": "@typescript-calendar/tui",
-  "version": "0.1.1",
+  "version": "0.2.0",
+  "description": "Framework-agnostic headless calendar data & state for any TUI framework (Ink, blessed, terminal-kit, ...)",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "files": ["src"],
+  "keywords": [
+    "calendar",
+    "tui",
+    "terminal",
+    "headless",
+    "cli",
+    "ink",
+    "blessed"
+  ],
+  "license": "MIT",
   "dependencies": {
     "@typescript-calendar/core": "workspace:*"
   },

@@ -1,0 +1,108 @@
+import { test, expect, describe } from "vitest";
+import { buildMonthData } from "./month-data.ts";
+
+const TODAY = new Date(2026, 8, 8); // 2026-09-08
+
+describe("buildMonthData", () => {
+  test("タイトルと曜日ヘッダーを含む", () => {
+    const data = buildMonthData(2026, 9);
+    expect(data.title).toBe("September 2026");
+    expect(data.weekdays).toEqual(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]);
+  });
+
+  test("日本語ロケールと月曜始まりを反映する", () => {
+    const data = buildMonthData(2026, 9, { locale: "ja", weekStart: "monday" });
+    expect(data.title).toBe("9月 2026");
+    expect(data.weekdays).toEqual(["月", "火", "水", "木", "金", "土", "日"]);
+  });
+
+  test("グリッドは6行×7列", () => {
+    const data = buildMonthData(2026, 9);
+    expect(data.cells).toHaveLength(6);
+    for (const row of data.cells) {
+      expect(row).toHaveLength(7);
+    }
+  });
+
+  test("日付セルには Date オブジェクトが入る", () => {
+    const data = buildMonthData(2026, 9);
+    const cell = data.cells[0]!.find((c) => c.day !== null)!;
+    expect(cell.date).toEqual(new Date(2026, 8, cell.day!));
+  });
+
+  test("空欄セルは day/date が null で isCurrentMonth が false", () => {
+    const data = buildMonthData(2026, 9);
+    const nullCell = data.cells[0]!.find((c) => c.day === null)!;
+    expect(nullCell.day).toBeNull();
+    expect(nullCell.date).toBeNull();
+    expect(nullCell.isCurrentMonth).toBe(false);
+  });
+
+  test("当月のセルは isCurrentMonth が true", () => {
+    const data = buildMonthData(2026, 9);
+    const cell = data.cells[0]!.find((c) => c.day !== null)!;
+    expect(cell.isCurrentMonth).toBe(true);
+  });
+
+  test("today を指定すると isToday が立つ", () => {
+    const data = buildMonthData(2026, 9, { today: TODAY });
+    const todayCells = data.cells.flat().filter((c) => c.isToday);
+    expect(todayCells).toHaveLength(1);
+    expect(todayCells[0]!.day).toBe(8);
+  });
+
+  test("highlight を指定すると isHighlight が立つ", () => {
+    const data = buildMonthData(2026, 9, {
+      today: TODAY,
+      highlight: new Date(2026, 8, 15),
+    });
+    const highlighted = data.cells.flat().filter((c) => c.isHighlight);
+    expect(highlighted).toHaveLength(1);
+    expect(highlighted[0]!.day).toBe(15);
+  });
+
+  test("範囲内の日付に isInRange が立つ", () => {
+    const data = buildMonthData(2026, 9, {
+      today: TODAY,
+      range: { from: new Date(2026, 8, 1), to: new Date(2026, 8, 15) },
+    });
+    const inRange = data.cells.flat().filter((c) => c.isInRange);
+    expect(inRange).toHaveLength(15);
+    expect(inRange.every((c) => c.day! >= 1 && c.day! <= 15)).toBe(true);
+  });
+
+  test("今日とハイライトは両立しうる", () => {
+    const data = buildMonthData(2026, 9, {
+      today: TODAY,
+      highlight: TODAY,
+    });
+    const cell = data.cells.flat().find((c) => c.day === 8)!;
+    expect(cell.isToday).toBe(true);
+    expect(cell.isHighlight).toBe(true);
+  });
+
+  test("visibleRows は日付を含む行数（2026-09 は5行）", () => {
+    const data = buildMonthData(2026, 9, { today: TODAY });
+    expect(data.visibleRows).toBe(5);
+  });
+
+  test("visibleRows は日付を含む行数（2026-02 は4行）", () => {
+    const data = buildMonthData(2026, 2, { today: TODAY });
+    expect(data.visibleRows).toBe(4);
+  });
+
+  test("dayOfWeek は列位置と一致する", () => {
+    const data = buildMonthData(2026, 9);
+    data.cells.forEach((row) => {
+      row.forEach((cell, colIdx) => {
+        expect(cell.dayOfWeek).toBe(colIdx);
+      });
+    });
+  });
+
+  test("月跨ぎ・年跨ぎの日付は含まれない", () => {
+    const data = buildMonthData(2026, 2, { today: TODAY });
+    const days = data.cells.flat().map((c) => c.day);
+    expect(days).not.toContain(28 + 1);
+  });
+});

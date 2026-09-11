@@ -1,32 +1,23 @@
-import type { CalendarOptions } from "@typescript-calendar/core";
-import { buildMonthGrid, getMonthName, getWeekdayHeaders } from "@typescript-calendar/core";
+export type {
+  CalendarCell,
+  MonthData,
+  MonthDataOptions,
+  CalendarStateOptions,
+  CalendarState,
+  ResolvedOptions,
+  Direction,
+  MonthDirection,
+} from "./types.ts";
 
-/**
- * TUIカレンダー - blessed/tarea で描画する予定
- * 現在は skeleton のみ
- */
-export function renderMonthTUI(
-  year: number,
-  month: number,
-  options: Omit<CalendarOptions, "year" | "month"> = {},
-): string {
-  // TODO: TUI固有の描画ロジックを実装
-  // 今はプレーンテキストにフォールバック
-  const { locale = "en", weekStart = "sunday" } = options;
-  const monthName = getMonthName(locale, month);
-  const weekdays = getWeekdayHeaders(locale, weekStart);
-  const grid = buildMonthGrid(year, month, weekStart);
+export { buildMonthData } from "./month-data.ts";
 
-  const lines: string[] = [];
-  lines.push(`${monthName} ${year}`);
-  lines.push(weekdays.join(" "));
-
-  for (const row of grid) {
-    if (row.every((d) => d === null)) continue;
-    lines.push(
-      row.map((d) => (d === null ? "  " : String(d).padStart(2))).join(" "),
-    );
-  }
-
-  return lines.join("\n");
-}
+export {
+  createCalendarState,
+  navigateMonth,
+  navigateYear,
+  goToMonth,
+  goToToday,
+  moveCursor,
+  getCursorDate,
+  selectDate,
+} from "./state.ts";
