@@ -1,6 +1,7 @@
 {
   "name": "typescript-calendar",
   "private": true,
+  "packageManager": "pnpm@11.25.0",
   "scripts": {
     "hooks:install": "git config core.hooksPath .githooks",
     "lint": "biome check .",
