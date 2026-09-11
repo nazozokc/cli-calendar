@@ -46,6 +46,15 @@ export interface CalendarProps {
   size?: CalendarSize;
   /** root 要素に追加するスタイル。CSS変数（--cal-*）で自由に上書きできる */
   style?: CSSProperties;
+
+  // ── インタラクション ──
+
+  /** インタラクティブモードを有効にする。セルクリック・ホバー・キーボード選択が可能になる */
+  interactive?: boolean;
+  /** セルクリック時のコールバック */
+  onDateClick?: (date: Date) => void;
+  /** セルホバー時のコールバック */
+  onDateHover?: (date: Date) => void;
 }
 
 function isSizeName(size: CalendarSize): size is CalendarSizeName {
@@ -80,6 +89,9 @@ export function Calendar({
   colorScheme = "default",
   size = "md",
   style,
+  interactive = false,
+  onDateClick,
+  onDateHover,
 }: CalendarProps) {
   const monthName = getMonthName(locale, month);
   const weekdays = getWeekdayHeaders(locale, weekStart);
@@ -102,9 +114,19 @@ export function Calendar({
 
   const sizeClass = isSizeName(size) ? ` calendar-size-${size}` : "";
 
+  const handleCellClick = (day: number) => {
+    if (!interactive || !onDateClick) return;
+    onDateClick(new Date(year, month - 1, day));
+  };
+
+  const handleCellHover = (day: number) => {
+    if (!interactive || !onDateHover) return;
+    onDateHover(new Date(year, month - 1, day));
+  };
+
   return (
     <div
-      className={`calendar ${resolvedTheme.className}${sizeClass}`}
+      className={`calendar ${resolvedTheme.className}${sizeClass}${interactive ? " calendar-interactive" : ""}`}
       style={{ ...cssVars, ...buildSizeStyle(size), ...style }}
     >
       <div className="calendar-header">
@@ -131,7 +153,29 @@ export function Calendar({
                     // biome-ignore lint/suspicious/noArrayIndexKey: パディングセルは位置が唯一の識別子
                     return <td key={j} />;
                   return (
-                    <td key={day} className={className(day) || undefined}>
+                    <td
+                      key={day}
+                      className={className(day) || undefined}
+                      onClick={() => handleCellClick(day)}
+                      onKeyDown={
+                        interactive
+                          ? (e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                handleCellClick(day);
+                              }
+                            }
+                          : undefined
+                      }
+                      onMouseEnter={() => handleCellHover(day)}
+                      role={interactive ? "button" : undefined}
+                      tabIndex={interactive ? 0 : undefined}
+                      aria-label={
+                        interactive
+                          ? `${getMonthName(locale, month)} ${day}, ${year}`
+                          : undefined
+                      }
+                    >
                       {day}
                     </td>
                   );
@@ -148,12 +192,16 @@ export function Calendar({
 export default Calendar;
 
 export type {
+  UseCalendarStateOptions,
+  UseCalendarStateReturn,
+} from "./hooks.ts";
+export { useCalendarState } from "./hooks.ts";
+export type {
   ColorSchemeName,
   ReactColorScheme,
   ReactTheme,
   ThemeName,
 } from "./themes.ts";
-
 export {
   COLOR_SCHEMES,
   resolveColorScheme,

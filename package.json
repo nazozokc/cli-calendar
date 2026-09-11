@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.12",
+    "@testing-library/jest-dom": "^7.0.1",
     "@vitest/coverage-v8": "^5.0.0",
     "typescript": "^7",
     "vitepress": "^1.6.4",

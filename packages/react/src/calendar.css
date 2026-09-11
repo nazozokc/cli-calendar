@@ -215,6 +215,37 @@
   background: transparent;
 }
 
+/* ─── Interactive ──────────────────────────────────────── */
+
+.calendar-interactive {
+  outline: none;
+}
+
+.calendar-interactive:focus-visible {
+  box-shadow: 0 0 0 2px var(--cal-accent);
+}
+
+.calendar-interactive td[role="button"] {
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.calendar-interactive td[role="button"]:hover {
+  background: var(--cal-range-bg);
+}
+
+.calendar-interactive td[role="button"]:focus-visible {
+  outline: 2px solid var(--cal-accent);
+  outline-offset: -2px;
+}
+
+.calendar-interactive td[role="button"]:active {
+  transform: scale(0.95);
+}
+
 /* ─── Theme: retro ─────────────────────────────────────── */
 
 .calendar-theme-retro {

@@ -1,6 +1,6 @@
 # @typescript-calendar/react
 
-A `<Calendar />` React component with CSS-based themes and color schemes. The component is fully controlled — you pass `year` and `month` and it renders the grid.
+A `<Calendar />` React component with CSS-based themes and color schemes, plus a `useCalendarState` hook for full interactivity. The component is fully controlled — you pass `year` and `month` and it renders the grid.
 
 ::: warning Peer dependency
 Requires React 19. The package doesn't bundle React; install it in your app:
@@ -56,8 +56,60 @@ export function App() {
 | `colorScheme` | `ColorSchemeName \| ReactColorScheme` | `"default"` | CSS variable-based colors |
 | `size` | `CalendarSize` | `"md"` | Cell size |
 | `style` | `CSSProperties` | — | Extra styles for the root element |
+| `interactive` | `boolean` | `false` | Enable cell click/hover/keyboard selection |
+| `onDateClick` | `(date: Date) => void` | — | Called when a day cell is clicked (or Enter/Space pressed) |
+| `onDateHover` | `(date: Date) => void` | — | Called when a day cell is hovered |
 
 The component exports as both named `Calendar` and default.
+
+## Interactive Mode
+
+Set `interactive` to make day cells clickable. Each cell becomes a focusable `role="button"` supporting click, mouse hover, and Enter / Space keys:
+
+```tsx
+<Calendar
+  year={2026}
+  month={9}
+  interactive
+  onDateClick={(date) => console.log("Selected", date)}
+  onDateHover={(date) => console.log("Hovered", date)}
+/>
+```
+
+### `useCalendarState` hook
+
+For full interactivity (cursor movement, month navigation, selection), use the `useCalendarState` hook. It wraps the [`tui`](/packages/tui) state machine as React state:
+
+```tsx
+import { Calendar, useCalendarState } from "@typescript-calendar/react";
+
+function App() {
+  const {
+    state,        // CalendarState (tui)
+    goNext,       // () => void — next month
+    goPrev,       // () => void — previous month
+    goToday,      // () => void — jump to today
+    moveCursor,   // (direction) => void — "up" | "down" | "left" | "right"
+    selectDate,   // () => void — select date under cursor
+    clearSelection,
+    cursorDate,   // Date | null
+    selectedDate, // Date | null
+  } = useCalendarState({
+    initialYear: 2026,
+    initialMonth: 9,
+  });
+
+  return (
+    <>
+      <button onClick={goPrev}>‹</button>
+      <Calendar year={state.year} month={state.month} interactive />
+      <button onClick={goNext}>›</button>
+    </>
+  );
+}
+```
+
+See the [Interactive Demo](/guide/interactive-demo) for a complete example.
 
 ## Themes
 
@@ -205,6 +257,7 @@ import Calendar, {
   resolveColorScheme,
   resolveTheme,
   THEMES,
+  useCalendarState,
 } from "@typescript-calendar/react";
 
 import type {
@@ -216,5 +269,7 @@ import type {
   ReactColorScheme,
   ReactTheme,
   ThemeName,
+  UseCalendarStateOptions,
+  UseCalendarStateReturn,
 } from "@typescript-calendar/react";
 ```

@@ -8,10 +8,15 @@
     "src"
   ],
   "dependencies": {
-    "@typescript-calendar/core": "workspace:*"
+    "@typescript-calendar/core": "workspace:*",
+    "@typescript-calendar/tui": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19"
+    "@testing-library/react": "^16",
+    "@types/react": "^19",
+    "jsdom": "^26",
+    "react-dom": "19.2.8",
+    "vitest": "^5"
   },
   "peerDependencies": {
     "typescript": "^5",
