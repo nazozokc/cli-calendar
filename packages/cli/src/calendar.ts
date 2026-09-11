@@ -4,15 +4,19 @@ import type {
   CalendarOptions,
   CalendarRangeOptions,
   CalendarYearOptions,
+  RenderMonthOptions,
 } from "./types.ts";
 
+// ─── Options 解決 ─────────────────────────────────────────
+
 /**
- * 月カレンダーをテキストで返す
+ * 各 API に共通のオプションをデフォルト値込みの描画オプションに正規化する。
+ * core 由来のオプションと CLI 固有のオプション（theme 等）をまとめる。
  */
-export function calendar(options: CalendarOptions): string {
+function toRenderOptions(
+  options: CalendarOptions | CalendarYearOptions | CalendarRangeOptions,
+): RenderMonthOptions {
   const {
-    year,
-    month,
     locale = "en",
     weekStart = "sunday",
     highlight,
@@ -24,7 +28,7 @@ export function calendar(options: CalendarOptions): string {
     today,
   } = options;
 
-  return renderMonth(year, month, {
+  return {
     locale,
     weekStart,
     highlight,
@@ -34,72 +38,33 @@ export function calendar(options: CalendarOptions): string {
     theme,
     colorScheme,
     today,
-  });
+  };
+}
+
+// ─── 公開API ─────────────────────────────────────────────
+
+/**
+ * 月カレンダーをテキストで返す
+ */
+export function calendar(options: CalendarOptions): string {
+  return renderMonth(options.year, options.month, toRenderOptions(options));
 }
 
 /**
  * 年間カレンダーを4列×3行でテキストで返す
  */
 export function calendarYear(options: CalendarYearOptions): string {
-  const {
-    year,
-    locale = "en",
-    weekStart = "sunday",
-    highlight,
-    highlightStyle = "bracket",
-    range,
-    color = false,
-    theme,
-    colorScheme,
-    today,
-  } = options;
-
-  return renderYear(year, {
-    locale,
-    weekStart,
-    highlight,
-    highlightStyle,
-    range,
-    color,
-    theme,
-    colorScheme,
-    today,
-  });
+  return renderYear(options.year, toRenderOptions(options));
 }
 
 /**
  * 任意の日付範囲のカレンダーをテキストで返す
  */
 export function calendarRange(options: CalendarRangeOptions): string {
-  const {
-    from,
-    to,
-    locale = "en",
-    weekStart = "sunday",
-    highlight,
-    highlightStyle = "bracket",
-    range,
-    color = false,
-    theme,
-    colorScheme,
-    today,
-  } = options;
-
-  const months = getMonthRange(from, to);
+  const renderOptions = toRenderOptions(options);
+  const months = getMonthRange(options.from, options.to);
 
   return months
-    .map(({ year, month }) =>
-      renderMonth(year, month, {
-        locale,
-        weekStart,
-        highlight,
-        highlightStyle,
-        range,
-        color,
-        theme,
-        colorScheme,
-        today,
-      }),
-    )
+    .map(({ year, month }) => renderMonth(year, month, renderOptions))
     .join("\n\n");
 }

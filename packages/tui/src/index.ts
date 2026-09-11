@@ -1,13 +1,7 @@
 export {
   clampCursor,
-  clearSelection,
-  findDateCell,
-  findFirstDayCell,
-  findTodayCell,
   getCursorDate,
-  getSelectedDate,
   moveCursor,
-  selectDate,
   setCursorToDate,
 } from "./cursor.ts";
 
@@ -19,7 +13,13 @@ export {
   navigateMonth,
   navigateYear,
 } from "./navigation.ts";
-export { createCalendarState } from "./state.ts";
+export {
+  findDateCell,
+  findFirstDayCell,
+  findTodayCell,
+} from "./search.ts";
+export { clearSelection, getSelectedDate, selectDate } from "./selection.ts";
+export { createCalendarState, rebuildState } from "./state.ts";
 export type {
   CellStyle,
   ColorScheme,

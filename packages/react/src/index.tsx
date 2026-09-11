@@ -3,10 +3,11 @@ import {
   buildMonthGrid,
   getMonthName,
   getWeekdayHeaders,
-  isDateInRange,
-  isSameDay,
 } from "@typescript-calendar/core";
 import type { CSSProperties } from "react";
+import { getCellClasses } from "./cell-classes.ts";
+import type { CalendarSize } from "./size.ts";
+import { buildSizeStyle, isSizeName } from "./size.ts";
 import type {
   ColorSchemeName,
   ReactColorScheme,
@@ -16,17 +17,11 @@ import type {
 import { resolveColorScheme, resolveTheme } from "./themes.ts";
 import "./calendar.css";
 
-/** 組み込みサイズ名 */
-export type CalendarSizeName = "sm" | "md" | "lg";
-
-/** カスタムセルサイズ。数値は px、文字列は CSS 長さのまま渡す */
-export interface CalendarCustomSize {
-  width?: number | string;
-  height?: number | string;
-}
-
-/** セルサイズ指定 */
-export type CalendarSize = CalendarSizeName | CalendarCustomSize;
+export type {
+  CalendarCustomSize,
+  CalendarSize,
+  CalendarSizeName,
+} from "./size.ts";
 
 export interface CalendarProps {
   year: number;
@@ -57,23 +52,6 @@ export interface CalendarProps {
   onDateHover?: (date: Date) => void;
 }
 
-function isSizeName(size: CalendarSize): size is CalendarSizeName {
-  return typeof size === "string";
-}
-
-function toCssLength(value: number | string): string {
-  return typeof value === "number" ? `${value}px` : value;
-}
-
-function buildSizeStyle(size: CalendarSize): CSSProperties {
-  if (isSizeName(size)) return {};
-  const style: Record<string, string> = {};
-  if (size.width !== undefined) style["--cal-cell-w"] = toCssLength(size.width);
-  if (size.height !== undefined)
-    style["--cal-cell-h"] = toCssLength(size.height);
-  return style;
-}
-
 /**
  * Reactカレンダーコンポーネント
  */
@@ -100,17 +78,8 @@ export function Calendar({
   const resolvedTheme = resolveTheme(theme);
   const cssVars = resolveColorScheme(colorScheme) as CSSProperties;
 
-  const className = (day: number): string => {
-    const date = new Date(year, month - 1, day);
-    const classes: string[] = [];
-    if (date.getDay() === 0 || date.getDay() === 6) classes.push("is-weekend");
-    if (today !== undefined && isSameDay(date, today)) classes.push("is-today");
-    if (highlight !== undefined && isSameDay(date, highlight))
-      classes.push("is-highlight");
-    if (range !== undefined && isDateInRange(date, range))
-      classes.push("is-in-range");
-    return classes.join(" ");
-  };
+  const className = (day: number): string =>
+    getCellClasses(new Date(year, month - 1, day), { today, highlight, range });
 
   const sizeClass = isSizeName(size) ? ` calendar-size-${size}` : "";
 
