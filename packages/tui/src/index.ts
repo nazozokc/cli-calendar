@@ -23,3 +23,19 @@ export {
   getSelectedDate,
   clearSelection,
 } from "./cursor.ts";
+
+export type {
+  ThemeName,
+  ColorSchemeName,
+  Theme,
+  FrameChars,
+  CellStyle,
+  ColorScheme,
+} from "./theme.ts";
+
+export {
+  THEMES,
+  COLOR_SCHEMES,
+  resolveTheme,
+  resolveColorScheme,
+} from "./theme.ts";

@@ -1,0 +1,138 @@
+/* ─── Base ─────────────────────────────────────────────── */
+
+.calendar {
+  --cal-bg: #ffffff;
+  --cal-fg: #1e293b;
+  --cal-accent: #dc2626;
+  --cal-weekend-fg: #94a3b8;
+  --cal-border: #e2e8f0;
+  --cal-header-bg: #f8fafc;
+  --cal-highlight-bg: #dc2626;
+  --cal-highlight-fg: #ffffff;
+  --cal-range-bg: #fef3c7;
+  --cal-today-bg: #fff7ed;
+  --cal-today-fg: #c2410c;
+
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  background: var(--cal-bg);
+  color: var(--cal-fg);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.calendar table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.calendar th,
+.calendar td {
+  width: 2.25rem;
+  height: 2rem;
+  padding: 0.125rem 0.375rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.calendar th {
+  color: var(--cal-accent);
+  font-weight: 600;
+}
+
+.calendar .calendar-header {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.calendar .calendar-header h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--cal-fg);
+}
+
+.calendar td.is-weekend {
+  color: var(--cal-weekend-fg);
+}
+
+.calendar td.is-today {
+  background: var(--cal-today-bg);
+  color: var(--cal-today-fg);
+  font-weight: 700;
+}
+
+.calendar td.is-highlight {
+  background: var(--cal-highlight-bg);
+  color: var(--cal-highlight-fg);
+  font-weight: 700;
+  border-radius: 0.375rem;
+}
+
+.calendar td.is-in-range {
+  background: var(--cal-range-bg);
+}
+
+/* ─── Theme: default ───────────────────────────────────── */
+
+.calendar-theme-default table {
+  border: 1px solid var(--cal-border);
+}
+
+.calendar-theme-default th {
+  border-bottom: 2px solid var(--cal-border);
+}
+
+.calendar-theme-default td {
+  border: 1px solid var(--cal-border);
+}
+
+.calendar-theme-default td.is-highlight {
+  border-radius: 0;
+}
+
+/* ─── Theme: modern ────────────────────────────────────── */
+
+.calendar-theme-modern {
+  border-radius: 1rem;
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.1),
+    0 8px 24px rgb(0 0 0 / 0.08);
+}
+
+.calendar-theme-modern .calendar-header {
+  background: var(--cal-header-bg);
+  margin: -0.75rem -1rem 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem 1rem 0 0;
+  border-bottom: 1px solid var(--cal-border);
+}
+
+.calendar-theme-modern table {
+  border: 1px solid var(--cal-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.calendar-theme-modern th {
+  background: var(--cal-header-bg);
+  border-bottom: 2px solid var(--cal-border);
+}
+
+.calendar-theme-modern td {
+  border: 1px solid var(--cal-border);
+}
+
+.calendar-theme-modern td:empty {
+  border-color: transparent;
+  background: transparent;
+}
+
+.calendar-theme-modern td.is-today {
+  border-radius: 0.375rem;
+}
+
+.calendar-theme-modern td.is-highlight {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+}

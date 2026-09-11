@@ -1,0 +1,165 @@
+// ─── テーマ ───────────────────────────────────────────────
+
+/** 組み込みテーマ名。カスタムテーマは Theme オブジェクトを直接渡せる */
+export type ThemeName = "default" | "modern";
+
+/** 枠線の文字セット（modern テーマで使用） */
+export interface FrameChars {
+  topLeft: string;
+  topRight: string;
+  bottomLeft: string;
+  bottomRight: string;
+  /** 水平線 */
+  h: string;
+  /** 垂直線 */
+  v: string;
+  /** ヘッダー/本文の区切り行で使う交差（┬ や ┼） */
+  j: string;
+  /** 下端区切りで使う交差（┴） */
+  footJ: string;
+}
+
+/**
+ * 文字ベースの見た目定義。
+ * headless のためレンダリングはしない。消費側 TUI フレームワーク（Ink 等）が
+ * この定義を元に自前の描画を行う。
+ */
+export interface Theme {
+  /** セル幅（日付表記の文字幅） */
+  cellWidth: number;
+  /** セル間の区切り文字（default: " " / modern: "│"） */
+  separator: string;
+  /** 枠線文字。null なら枠なし */
+  frame: FrameChars | null;
+}
+
+export const THEMES: Record<ThemeName, Theme> = {
+  default: {
+    cellWidth: 3,
+    separator: " ",
+    frame: null,
+  },
+  modern: {
+    cellWidth: 3,
+    separator: "│",
+    frame: {
+      topLeft: "┌",
+      topRight: "┐",
+      bottomLeft: "└",
+      bottomRight: "┘",
+      h: "─",
+      v: "│",
+      j: "┬",
+      footJ: "┴",
+    },
+  },
+};
+
+export function resolveTheme(theme?: ThemeName | Theme): Theme {
+  if (theme === undefined) return THEMES.default;
+  if (typeof theme === "string") return THEMES[theme] ?? THEMES.default;
+  return theme;
+}
+
+// ─── カラースキーム ───────────────────────────────────────
+
+/** 組み込みカラースキーム名。カスタムは ColorScheme を直接渡せる */
+export type ColorSchemeName = "default" | "ocean" | "forest" | "sunset" | "mono";
+
+/** 1要素のスタイル（ANSIコードや装飾フラグ。undefined は既定のまま） */
+export interface CellStyle {
+  /** 前景色 ANSI コード（0–255） */
+  fg?: number;
+  /** 背景色 ANSI コード（0–255） */
+  bg?: number;
+  bold?: boolean;
+  dim?: boolean;
+  underline?: boolean;
+  reverse?: boolean;
+}
+
+/** カレンダー要素ごとのスタイル定義 */
+export interface ColorScheme {
+  title: CellStyle;
+  weekday: CellStyle;
+  day: CellStyle;
+  weekend: CellStyle;
+  today: CellStyle;
+  /** ハイライト日（reverse 装飾想定） */
+  highlight: CellStyle;
+  range: CellStyle;
+  /** 空セルや枠線 */
+  dim: CellStyle;
+  frame: CellStyle;
+}
+
+const plain = (): CellStyle => ({});
+
+export const COLOR_SCHEMES: Record<ColorSchemeName, ColorScheme> = {
+  /** 従来どおり。着色は range(黄) と highlight(反転) のみ */
+  default: {
+    title: plain(),
+    weekday: plain(),
+    day: plain(),
+    weekend: plain(),
+    today: plain(),
+    highlight: { reverse: true },
+    range: { fg: 33 },
+    dim: plain(),
+    frame: plain(),
+  },
+  ocean: {
+    title: { fg: 36 },
+    weekday: { fg: 36 },
+    day: { fg: 37 },
+    weekend: { fg: 34 },
+    today: { fg: 36, bold: true },
+    highlight: { reverse: true },
+    range: { fg: 34 },
+    dim: { fg: 90 },
+    frame: { fg: 36 },
+  },
+  forest: {
+    title: { fg: 32 },
+    weekday: { fg: 32 },
+    day: { fg: 37 },
+    weekend: { fg: 90 },
+    today: { fg: 32, bold: true },
+    highlight: { reverse: true },
+    range: { fg: 32 },
+    dim: { fg: 90 },
+    frame: { fg: 32 },
+  },
+  sunset: {
+    title: { fg: 35 },
+    weekday: { fg: 35 },
+    day: { fg: 37 },
+    weekend: { fg: 33 },
+    today: { fg: 35, bold: true },
+    highlight: { reverse: true },
+    range: { fg: 35 },
+    dim: { fg: 90 },
+    frame: { fg: 35 },
+  },
+  mono: {
+    title: { fg: 37 },
+    weekday: { fg: 37 },
+    day: { fg: 37 },
+    weekend: { fg: 90 },
+    today: { fg: 37, bold: true },
+    highlight: { reverse: true },
+    range: { fg: 90 },
+    dim: { fg: 90 },
+    frame: { fg: 90 },
+  },
+};
+
+export function resolveColorScheme(
+  scheme?: ColorSchemeName | ColorScheme,
+): ColorScheme {
+  if (scheme === undefined) return COLOR_SCHEMES.default;
+  if (typeof scheme === "string") {
+    return COLOR_SCHEMES[scheme] ?? COLOR_SCHEMES.default;
+  }
+  return scheme;
+}

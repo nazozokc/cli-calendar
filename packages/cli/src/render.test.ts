@@ -77,3 +77,100 @@ describe("renderMonth - range color", () => {
     expect(out).toContain("\u001b[7m  8\u001b[0m");
   });
 });
+
+describe("renderMonth - themes", () => {
+  const base = { today: new Date(2026, 8, 1) };
+
+  test("modernテーマは枠線と縦区切りを使う", () => {
+    const out = renderMonth(2026, 9, { theme: "modern", ...base });
+    const lines = out.split("\n");
+    expect(lines[0]).toBe("┌───────────────────────────┐");
+    expect(lines[1]).toBe("│      September 2026       │");
+    expect(lines[2]).toBe("├───┬───┬───┬───┬───┬───┬───┤");
+    expect(lines[3]).toBe("│Sun│Mon│Tue│Wed│Thu│Fri│Sat│");
+    expect(lines[lines.length - 1]).toBe("└───┴───┴───┴───┴───┴───┴───┘");
+  });
+
+  test("modernテーマでも日付とハイライトは描画される", () => {
+    const out = renderMonth(2026, 9, {
+      theme: "modern",
+      highlight: new Date(2026, 8, 8),
+      ...base,
+    });
+    expect(out).toContain("│[8]│");
+    expect(out).toContain("│ 30│");
+  });
+
+  test("modernテーマとカラースキームで枠と曜日が着色される", () => {
+    const out = renderMonth(2026, 9, {
+      theme: "modern",
+      colorScheme: "ocean",
+      color: true,
+      ...base,
+    });
+    expect(out).toContain("\u001b[36m┌───────────────────────────┐\u001b[0m");
+    expect(out).toContain("\u001b[36m│Sun│Mon│Tue│Wed│Thu│Fri│Sat│\u001b[0m");
+  });
+
+  test("カスタムテーマオブジェクトを受け付ける", () => {
+    const out = renderMonth(2026, 9, {
+      theme: {
+        cellWidth: 3,
+        separator: "|",
+        frame: null,
+      },
+      ...base,
+    });
+    expect(out).toContain("Sun|Mon|Tue|Wed|Thu|Fri|Sat");
+  });
+
+  test("不明なテーマ名はdefaultにフォールバックする", () => {
+    // @ts-expect-error 不明なテーマ名
+    const out = renderMonth(2026, 9, { theme: "unknown", ...base });
+    expect(out.split("\n")[0]).toBe("      September 2026");
+  });
+});
+
+describe("renderMonth - color schemes", () => {
+  const base = { today: new Date(2026, 8, 1), color: true };
+
+  test("defaultスキームは従来どおりの着色のみ", () => {
+    const out = renderMonth(2026, 9, {
+      range: { from: new Date(2026, 8, 1), to: new Date(2026, 8, 5) },
+      ...base,
+    });
+    expect(out).toContain("\u001b[33m  1\u001b[0m");
+    // 曜日ヘッダーや通常の日付には着色しない
+    expect(out).not.toContain("\u001b[36m");
+  });
+
+  test("oceanスキームは曜日・今日・土日を着色する", () => {
+    const out = renderMonth(2026, 9, {
+      colorScheme: "ocean",
+      ...base,
+      today: new Date(2026, 8, 11),
+    });
+    // 曜日ヘッダー
+    expect(out).toContain("\u001b[36mSun\u001b[0m");
+    // 今日
+    expect(out).toContain("\u001b[36m 11\u001b[0m");
+    // 土日（9/5 は土曜、9/6 は日曜）
+    expect(out).toContain("\u001b[34m  5\u001b[0m");
+    expect(out).toContain("\u001b[34m  6\u001b[0m");
+  });
+
+  test("カスタムパレットを受け付ける", () => {
+    const out = renderMonth(2026, 9, {
+      colorScheme: { range: 95 },
+      range: { from: new Date(2026, 8, 1), to: new Date(2026, 8, 5) },
+      ...base,
+    });
+    expect(out).toContain("\u001b[95m  1\u001b[0m");
+  });
+
+  test("不明なカラースキーム名はdefaultにフォールバックする", () => {
+    // @ts-expect-error 不明なカラースキーム名
+    const out = renderMonth(2026, 9, { colorScheme: "unknown", ...base });
+    expect(out.split("\n")[1]).toBe("Sun Mon Tue Wed Thu Fri Sat");
+  });
+});

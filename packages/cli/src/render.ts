@@ -1,5 +1,7 @@
-import type { RenderMonthOptions } from "@typescript-calendar/core";
 import { getMonthName, getWeekdayHeaders, buildMonthGrid, isDateInRange, isSameDay } from "@typescript-calendar/core";
+import type { RenderMonthOptions } from "./types.ts";
+import { resolveTheme, resolveColorScheme } from "./theme.ts";
+import type { CliPalette, FrameChars } from "./theme.ts";
 
 const CELL_WIDTH = 3;
 
@@ -18,58 +20,178 @@ export function renderMonth(
     highlightStyle = "bracket",
     range,
     color = false,
+    theme: themeOption = "default",
+    colorScheme: schemeOption = "default",
+    today = new Date(),
   } = options;
 
-  const monthName = getMonthName(locale, month);
-  const title = `${monthName} ${year}`;
+  const theme = resolveTheme(themeOption);
+  const palette = resolveColorScheme(schemeOption);
+
+  const title = `${getMonthName(locale, month)} ${year}`;
   const weekdays = getWeekdayHeaders(locale, weekStart);
   const grid = buildMonthGrid(year, month, weekStart);
 
   const lines: string[] = [];
 
-  lines.push(centerTitle(title, weekdays));
+  if (theme.frame === null) {
+    // ── 枠なし（default） ──
+    const sep = theme.separator;
+    const totalWidth =
+      weekdays.length * theme.cellWidth +
+      (weekdays.length - 1) * sep.length;
 
-  lines.push(
-    weekdays.map((d) => d.padStart(CELL_WIDTH)).join(" "),
-  );
+    lines.push(centerText(title, totalWidth));
 
-  for (const row of grid) {
-    if (row.every((d) => d === null)) continue;
+    lines.push(
+      weekdays
+        .map((d) => colorize(d.padStart(theme.cellWidth), palette.weekday, color))
+        .join(sep),
+    );
 
-    const cells = row.map((day) => {
-      if (day === null) {
-        return "".padStart(CELL_WIDTH);
-      }
+    for (const row of grid) {
+      if (row.every((d) => d === null)) continue;
 
-      const date = new Date(year, month - 1, day);
-      const isHighlight =
-        highlight !== undefined && isSameDay(date, highlight);
-      const isInRange = isDateInRange(date, range);
+      const cells = row.map((day) =>
+        renderCell(year, month, day, highlight, highlightStyle, range, today, color, palette),
+      );
 
-      let text: string;
+      lines.push(cells.join(sep));
+    }
+  } else {
+    // ── 枠あり（modern） ──
+    const frame = theme.frame;
 
-      if (isHighlight && highlightStyle === "bracket") {
-        text = `[${day}]`;
-        text = text.padStart(CELL_WIDTH);
-      } else {
-        text = String(day).padStart(CELL_WIDTH);
-      }
+    lines.push(
+      colorize(topBorder(frame, theme.cellWidth, weekdays.length), palette.frame, color),
+    );
+    lines.push(
+      colorize(
+        `${frame.v}${centerTextFull(title, innerWidth(theme.cellWidth, weekdays.length))}${frame.v}`,
+        palette.title,
+        color,
+      ),
+    );
+    lines.push(
+      colorize(separatorRow(frame, theme.cellWidth, weekdays.length), palette.frame, color),
+    );
+    lines.push(
+      colorize(
+        `${frame.v}${weekdays.map((d) => d.padStart(theme.cellWidth)).join(frame.v)}${frame.v}`,
+        palette.weekday,
+        color,
+      ),
+    );
+    lines.push(
+      colorize(separatorRow(frame, theme.cellWidth, weekdays.length), palette.frame, color),
+    );
 
-      if (color) {
-        if (isHighlight && highlightStyle === "reverse") {
-          text = `\u001b[7m${text}\u001b[0m`;
-        } else if (isInRange && !isHighlight) {
-          text = `\u001b[33m${text}\u001b[0m`;
-        }
-      }
+    for (const row of grid) {
+      if (row.every((d) => d === null)) continue;
 
-      return text;
-    });
+      const cells = row.map((day) =>
+        renderCell(year, month, day, highlight, highlightStyle, range, today, color, palette),
+      );
 
-    lines.push(cells.join(" "));
+      lines.push(`${frame.v}${cells.join(frame.v)}${frame.v}`);
+    }
+
+    lines.push(
+      colorize(bottomBorder(frame, theme.cellWidth, weekdays.length), palette.frame, color),
+    );
   }
 
   return lines.join("\n");
+}
+
+// ─── セル ─────────────────────────────────────────────────
+
+function renderCell(
+  year: number,
+  month: number,
+  day: number | null,
+  highlight: Date | undefined,
+  highlightStyle: "bracket" | "reverse",
+  range: { from: Date; to: Date } | undefined,
+  today: Date,
+  color: boolean,
+  palette: CliPalette,
+): string {
+  if (day === null) {
+    return " ".repeat(CELL_WIDTH);
+  }
+
+  const date = new Date(year, month - 1, day);
+  const isHighlight = highlight !== undefined && isSameDay(date, highlight);
+  const isInRange = isDateInRange(date, range);
+  const isToday = isSameDay(date, today);
+  const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+  let text: string;
+  if (isHighlight && highlightStyle === "bracket") {
+    text = `[${day}]`.padStart(CELL_WIDTH);
+  } else {
+    text = String(day).padStart(CELL_WIDTH);
+  }
+
+  let code: number | undefined;
+  if (isHighlight && highlightStyle === "reverse") {
+    code = palette.highlight ?? 7;
+  } else if (isInRange && !isHighlight) {
+    code = palette.range ?? 33;
+  } else if (isToday && palette.today !== undefined) {
+    code = palette.today;
+  } else if (isWeekend && palette.weekend !== undefined) {
+    code = palette.weekend;
+  } else if (palette.day !== undefined) {
+    code = palette.day;
+  }
+
+  return colorize(text, code, color);
+}
+
+/** ANSI コードを付与する（code が undefined ならそのまま） */
+function colorize(text: string, code: number | undefined, enabled: boolean): string {
+  if (!enabled || code === undefined) return text;
+  return `\u001b[${code}m${text}\u001b[0m`;
+}
+
+// ─── 枠線 ─────────────────────────────────────────────────
+
+/** 枠内のコンテンツ幅（例: 7列×3幅+区切り6 = 27） */
+function innerWidth(cellWidth: number, cols: number): number {
+  return cols * cellWidth + (cols - 1);
+}
+
+/** 上枠: ┌────┬────...────┐ */
+function topBorder(frame: FrameChars, cellWidth: number, cols: number): string {
+  return `${frame.topLeft}${frame.h.repeat(innerWidth(cellWidth, cols))}${frame.topRight}`;
+}
+
+/** 下枠: └────┴────...────┘ */
+function bottomBorder(frame: FrameChars, cellWidth: number, cols: number): string {
+  const segments = Array<string>(cols).fill(frame.h.repeat(cellWidth));
+  return `${frame.bottomLeft}${segments.join(frame.footJ)}${frame.bottomRight}`;
+}
+
+/** 区切り行: ├────┬────...┬────┤ */
+function separatorRow(frame: FrameChars, cellWidth: number, cols: number): string {
+  const segments = Array<string>(cols).fill(frame.h.repeat(cellWidth));
+  return `├${segments.join(frame.j)}┤`;
+}
+
+// ─── その他 ───────────────────────────────────────────────
+
+/** タイトルを幅の中央に揃える */
+function centerText(text: string, width: number): string {
+  const padding = Math.max(0, Math.floor((width - text.length) / 2));
+  return " ".repeat(padding) + text;
+}
+
+/** タイトルを中央に揃え、幅一杯まで埋める（枠内用） */
+function centerTextFull(text: string, width: number): string {
+  const padding = Math.max(0, Math.floor((width - text.length) / 2));
+  return " ".repeat(padding) + text.padEnd(width - padding);
 }
 
 /**
@@ -116,14 +238,4 @@ export function renderYear(
   }
 
   return result.join("\n");
-}
-
-/**
- * タイトルを曜日ヘッダー幅の中央に揃える
- */
-function centerTitle(title: string, weekdays: readonly string[]): string {
-  const totalWidth =
-    weekdays.length * CELL_WIDTH + (weekdays.length - 1);
-  const padding = Math.max(0, Math.floor((totalWidth - title.length) / 2));
-  return " ".repeat(padding) + title;
 }

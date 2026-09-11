@@ -2,7 +2,7 @@ import type {
   CalendarOptions,
   CalendarYearOptions,
   CalendarRangeOptions,
-} from "@typescript-calendar/core";
+} from "./types.ts";
 import { getMonthRange } from "@typescript-calendar/core";
 import { renderMonth, renderYear } from "./render.ts";
 
@@ -19,6 +19,9 @@ export function calendar(options: CalendarOptions): string {
     highlightStyle = "bracket",
     range,
     color = false,
+    theme,
+    colorScheme,
+    today,
   } = options;
 
   return renderMonth(year, month, {
@@ -28,6 +31,9 @@ export function calendar(options: CalendarOptions): string {
     highlightStyle,
     range,
     color,
+    theme,
+    colorScheme,
+    today,
   });
 }
 
@@ -43,6 +49,9 @@ export function calendarYear(options: CalendarYearOptions): string {
     highlightStyle = "bracket",
     range,
     color = false,
+    theme,
+    colorScheme,
+    today,
   } = options;
 
   return renderYear(year, {
@@ -52,6 +61,9 @@ export function calendarYear(options: CalendarYearOptions): string {
     highlightStyle,
     range,
     color,
+    theme,
+    colorScheme,
+    today,
   });
 }
 
@@ -68,6 +80,9 @@ export function calendarRange(options: CalendarRangeOptions): string {
     highlightStyle = "bracket",
     range,
     color = false,
+    theme,
+    colorScheme,
+    today,
   } = options;
 
   const months = getMonthRange(from, to);
@@ -80,6 +95,9 @@ export function calendarRange(options: CalendarRangeOptions): string {
       highlightStyle,
       range,
       color,
+      theme,
+      colorScheme,
+      today,
     }))
     .join("\n\n");
 }

@@ -1,0 +1,57 @@
+import { test, expect, describe } from "vitest";
+import { THEMES, COLOR_SCHEMES, resolveTheme, resolveColorScheme } from "./theme.ts";
+
+describe("resolveTheme", () => {
+  test("省略時は default", () => {
+    expect(resolveTheme()).toBe(THEMES.default);
+    expect(resolveTheme().frame).toBeNull();
+  });
+
+  test("名前で解決できる", () => {
+    expect(resolveTheme("modern").frame?.topLeft).toBe("┌");
+    expect(resolveTheme("modern").separator).toBe("│");
+  });
+
+  test("不明な名前は default にフォールバックする", () => {
+    // @ts-expect-error 不明なテーマ名
+    expect(resolveTheme("unknown")).toBe(THEMES.default);
+  });
+
+  test("カスタムテーマを受け付ける", () => {
+    const custom = { cellWidth: 2, separator: "|", frame: null };
+    expect(resolveTheme(custom)).toBe(custom);
+  });
+});
+
+describe("resolveColorScheme", () => {
+  test("省略時は default", () => {
+    expect(resolveColorScheme()).toBe(COLOR_SCHEMES.default);
+  });
+
+  test("default は range のみ黄色", () => {
+    const s = resolveColorScheme("default");
+    expect(s.range.fg).toBe(33);
+    expect(s.day).toEqual({});
+  });
+
+  test("ocean は highlight が reverse", () => {
+    const s = resolveColorScheme("ocean");
+    expect(s.highlight.reverse).toBe(true);
+    expect(s.title.fg).toBe(36);
+  });
+
+  test("カスタムスキームを受け付ける", () => {
+    const custom = {
+      title: { fg: 95 },
+      weekday: {},
+      day: {},
+      weekend: {},
+      today: {},
+      highlight: {},
+      range: {},
+      dim: {},
+      frame: {},
+    };
+    expect(resolveColorScheme(custom)).toBe(custom);
+  });
+});
