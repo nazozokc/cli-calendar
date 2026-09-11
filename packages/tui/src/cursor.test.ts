@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 import { createCalendarState } from "./state.ts";
-import { moveCursor, selectDate, getCursorDate } from "./cursor.ts";
+import { moveCursor, selectDate, getCursorDate, setCursorToDate, getSelectedDate, clearSelection } from "./cursor.ts";
 
 const TODAY = new Date(2026, 8, 15); // 2026-09-15
 
@@ -91,5 +91,58 @@ describe("selectDate / getCursorDate", () => {
       initialCursor: { row: 4, col: 4 },
     });
     expect(getCursorDate(state)).toBeNull();
+  });
+});
+
+describe("setCursorToDate", () => {
+  test("当月内の日付のセルへカーソルを移動する", () => {
+    const state = createCalendarState({ today: TODAY });
+    const target = new Date(2026, 8, 20);
+    const moved = setCursorToDate(state, target);
+    expect(getCursorDate(moved)).toEqual(target);
+  });
+
+  test("当月外の日付なら状態を変えず返す", () => {
+    const state = createCalendarState({
+      today: TODAY,
+      initialCursor: { row: 2, col: 2 },
+    });
+    const moved = setCursorToDate(state, new Date(2026, 9, 1));
+    expect(moved).toEqual(state);
+  });
+
+  test("カーソル未設定でも指定日付にセットできる", () => {
+    const state = createCalendarState({
+      today: TODAY,
+      initialCursor: null,
+    });
+    const target = new Date(2026, 8, 1);
+    const moved = setCursorToDate(state, target);
+    expect(getCursorDate(moved)).toEqual(target);
+  });
+});
+
+describe("getSelectedDate / clearSelection", () => {
+  test("選択中の日付を返す", () => {
+    const state = createCalendarState({ today: TODAY });
+    const selected = selectDate(state);
+    expect(getSelectedDate(selected)).toEqual(TODAY);
+  });
+
+  test("未選択なら null を返す", () => {
+    const state = createCalendarState({ today: TODAY });
+    expect(getSelectedDate(state)).toBeNull();
+  });
+
+  test("選択を解除すると null に戻る", () => {
+    const state = createCalendarState({ today: TODAY });
+    const selected = selectDate(state);
+    const cleared = clearSelection(selected);
+    expect(cleared.selectedDate).toBeNull();
+  });
+
+  test("未選択の状態でも選択解除は安全に呼べる", () => {
+    const state = createCalendarState({ today: TODAY });
+    expect(clearSelection(state).selectedDate).toBeNull();
   });
 });

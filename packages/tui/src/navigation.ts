@@ -4,7 +4,7 @@ import type {
   ResolvedOptions,
 } from "./types.ts";
 import { buildMonthData } from "./month-data.ts";
-import { clampCursor, findTodayCell } from "./cursor.ts";
+import { clampCursor, findDateCell, findTodayCell } from "./cursor.ts";
 
 // ─── 日付計算 ────────────────────────────────────────────
 
@@ -75,6 +75,21 @@ export function goToMonth(
     state.selectedDate,
     state.options,
   );
+}
+
+/** 指定した日付の月へジャンプし、カーソルをその日付のセルに置く */
+export function goToDate(state: CalendarState, date: Date): CalendarState {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const monthData = buildMonthData(year, month, state.options);
+  return {
+    year,
+    month,
+    cursor: findDateCell(monthData, date),
+    selectedDate: state.selectedDate,
+    options: state.options,
+    monthData,
+  };
 }
 
 /** 今日の月へジャンプし、カーソルを今日のセルに置く */

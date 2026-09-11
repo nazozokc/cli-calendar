@@ -1,3 +1,4 @@
+import { isSameDay } from "@typescript-calendar/core";
 import type { CalendarState, Direction, MonthData } from "./types.ts";
 
 // ─── セル検索 ────────────────────────────────────────────
@@ -10,6 +11,23 @@ export function findTodayCell(
     const cells = monthData.cells[row]!;
     for (let col = 0; col < cells.length; col++) {
       if (cells[col]!.isToday) return { row, col };
+    }
+  }
+  return null;
+}
+
+/** 月データから指定日付のセル位置を探す。なければ null */
+export function findDateCell(
+  monthData: MonthData,
+  date: Date,
+): { row: number; col: number } | null {
+  for (let row = 0; row < monthData.cells.length; row++) {
+    const cells = monthData.cells[row]!;
+    for (let col = 0; col < cells.length; col++) {
+      const cell = cells[col]!;
+      if (cell.date !== null && isSameDay(cell.date, date)) {
+        return { row, col };
+      }
     }
   }
   return null;
@@ -81,6 +99,16 @@ export function moveCursor(
 
 // ─── 日付取得・選択 ──────────────────────────────────────
 
+/** 指定日付のセルへカーソルを移動する。当月に無ければ状態を変えず返す */
+export function setCursorToDate(
+  state: CalendarState,
+  date: Date,
+): CalendarState {
+  const pos = findDateCell(state.monthData, date);
+  if (pos === null) return state;
+  return { ...state, cursor: pos };
+}
+
 /** カーソル位置の日付を取得する。空欄セルなら null */
 export function getCursorDate(state: CalendarState): Date | null {
   if (state.cursor === null) return null;
@@ -93,4 +121,14 @@ export function selectDate(state: CalendarState): CalendarState {
   const date = getCursorDate(state);
   if (date === null) return state;
   return { ...state, selectedDate: date };
+}
+
+/** 選択中の日付を取得する。未選択なら null */
+export function getSelectedDate(state: CalendarState): Date | null {
+  return state.selectedDate;
+}
+
+/** 選択を解除する */
+export function clearSelection(state: CalendarState): CalendarState {
+  return { ...state, selectedDate: null };
 }

@@ -4,6 +4,7 @@ import {
   navigateMonth,
   navigateYear,
   goToMonth,
+  goToDate,
   goToToday,
 } from "./navigation.ts";
 import { selectDate, getCursorDate } from "./cursor.ts";
@@ -105,5 +106,31 @@ describe("goToMonth / goToToday", () => {
     expect(now.year).toBe(2026);
     expect(now.month).toBe(9);
     expect(getCursorDate(now)).toEqual(TODAY);
+  });
+
+  test("指定日付の月へジャンプしカーソルをその日付に置く", () => {
+    const state = createCalendarState({ today: TODAY });
+    const target = new Date(2024, 1, 14);
+    const jumped = goToDate(state, target);
+    expect(jumped.year).toBe(2024);
+    expect(jumped.month).toBe(2);
+    expect(jumped.monthData.title).toBe("February 2024");
+    expect(getCursorDate(jumped)).toEqual(target);
+  });
+
+  test("年跨ぎの日付にもジャンプできる", () => {
+    const state = createCalendarState({ today: TODAY });
+    const jumped = goToDate(state, new Date(2027, 0, 5));
+    expect(jumped.year).toBe(2027);
+    expect(jumped.month).toBe(1);
+    expect(getCursorDate(jumped)).toEqual(new Date(2027, 0, 5));
+  });
+
+  test("ジャンプ後もロケールと選択状態が保持される", () => {
+    const state = createCalendarState({ today: TODAY, locale: "ja" });
+    const selected = selectDate(state);
+    const jumped = goToDate(selected, new Date(2026, 8, 20));
+    expect(jumped.monthData.title).toBe("9月 2026");
+    expect(jumped.selectedDate).toEqual(TODAY);
   });
 });
