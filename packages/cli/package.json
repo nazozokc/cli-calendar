@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "type": "module",
   "bin": {
-    "typescript-calendar": "src/index.ts"
+    "typescript-calendar": "src/bin.ts"
   },
   "main": "src/index.ts",
   "types": "src/index.ts",
