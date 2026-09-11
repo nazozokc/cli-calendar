@@ -1,10 +1,10 @@
 import type {
   CalendarOptions,
-  CalendarRangeOptions,
   CalendarYearOptions,
-} from "./types.ts";
+  CalendarRangeOptions,
+} from "@cli-calendar/core";
+import { getMonthRange } from "@cli-calendar/core";
 import { renderMonth } from "./render.ts";
-import { getMonthRange } from "./utils.ts";
 
 /**
  * 月カレンダーをテキストで返す
@@ -54,22 +54,18 @@ export function calendarYear(options: CalendarYearOptions): string {
     color,
   };
 
-  // 各月をレンダリング
   const months: string[] = [];
   for (let m = 1; m <= 12; m++) {
     months.push(renderMonth(year, m, renderOpts));
   }
 
-  // 各月の行に分割
   const monthLines = months.map((m) => m.split("\n"));
   const maxLines = Math.max(...monthLines.map((l) => l.length));
 
-  // 最大幅を計算（各月の最大行幅）
   const colWidths = monthLines.map((lines) =>
     Math.max(...lines.map((l) => l.length)),
   );
 
-  // 4列×3行に配置
   const result: string[] = [];
   for (let row = 0; row < 3; row++) {
     const rowLines: string[] = [];
@@ -89,7 +85,6 @@ export function calendarYear(options: CalendarYearOptions): string {
     }
     result.push(rowLines.join("\n"));
 
-    // 月の行間は空行を入れる
     if (row < 2) {
       result.push("");
     }

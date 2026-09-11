@@ -1,8 +1,7 @@
-import type { RenderMonthOptions } from "./types.ts";
-import { getMonthName, getWeekdayHeaders } from "./locale.ts";
-import { buildMonthGrid, isDateInRange, isSameDay } from "./utils.ts";
+import type { RenderMonthOptions } from "@cli-calendar/core";
+import { getMonthName, getWeekdayHeaders, buildMonthGrid, isDateInRange, isSameDay } from "@cli-calendar/core";
 
-const CELL_WIDTH = 3; // 各日付セルの幅（右寄せ）
+const CELL_WIDTH = 3;
 
 /**
  * 1ヶ月分のカレンダーテキストを描画する
@@ -28,17 +27,13 @@ export function renderMonth(
 
   const lines: string[] = [];
 
-  // タイトル行
   lines.push(centerTitle(title, weekdays));
 
-  // 曜日ヘッダー
   lines.push(
     weekdays.map((d) => d.padStart(CELL_WIDTH)).join(" "),
   );
 
-  // 日付グリッド
   for (const row of grid) {
-    // 全セルがnullなら空行をスキップ
     if (row.every((d) => d === null)) continue;
 
     const cells = row.map((day) => {
@@ -54,9 +49,7 @@ export function renderMonth(
       let text: string;
 
       if (isHighlight && highlightStyle === "bracket") {
-        // 角括囲み
         text = `[${day}]`;
-        // 両端に余白を足して桁揃え
         text = text.padStart(CELL_WIDTH);
       } else {
         text = String(day).padStart(CELL_WIDTH);

@@ -1,18 +1,12 @@
 {
-  "name": "@nazozokc-prod/cli-calendar",
-  "module": "src/index.ts",
-  "version": "0.1.1",
-  "type": "module",
-  "bin": {
-    "cli-calendar": "dist/index.mjs"
+  "name": "cli-calendar",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "test": "bun test"
   },
   "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
+    "@types/bun": "latest",
     "typescript": "^5"
-  },
-  "dependencies": {
-    "cli-table3": "^0.6.5"
   }
 }

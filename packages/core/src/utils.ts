@@ -23,10 +23,9 @@ export function buildMonthGrid(
   const last = lastDayOfMonth(year, month);
   const daysInMonth = last.getDate();
 
-  // 曜日のオフセットを計算（0=日, 1=月, ... 6=土）
-  let startDayOfWeek = first.getDay(); // 0=Sun
+  let startDayOfWeek = first.getDay();
   if (weekStart === "monday") {
-    startDayOfWeek = (startDayOfWeek + 6) % 7; // 0=Mon
+    startDayOfWeek = (startDayOfWeek + 6) % 7;
   }
 
   const grid: (number | null)[][] = [];

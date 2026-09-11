@@ -4,7 +4,7 @@ export type HighlightStyle = "bracket" | "reverse";
 
 export interface CalendarOptions {
   year: number;
-  month: number; // 1-12
+  month: number;
   locale?: Locale;
   weekStart?: WeekStart;
   highlight?: Date;

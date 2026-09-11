@@ -46,14 +46,11 @@ describe("buildMonthGrid", () => {
   });
 
   test("9月2026（日曜始まり）は1日が火曜から開始", () => {
-    // 2026-09-01 は火曜（getDay()=2）
     const grid = buildMonthGrid(2026, 9, "sunday");
-    // 最初の行: [null, null, 1, 2, 3, 4, 5]
     expect(grid[0]).toEqual([null, null, 1, 2, 3, 4, 5]);
   });
 
   test("9月2026（月曜始まり）は1日が月曜から開始", () => {
-    // 2026-09-01 は火曜 → 月曜始まりではオフセット1
     const grid = buildMonthGrid(2026, 9, "monday");
     expect(grid[0]).toEqual([null, 1, 2, 3, 4, 5, 6]);
   });

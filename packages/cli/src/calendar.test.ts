@@ -9,7 +9,6 @@ describe("calendar", () => {
 
   test("日付グリッドを含む", () => {
     const out = calendar({ year: 2026, month: 9 });
-    // 9月の最終日と開始日
     expect(out).toContain(" 1");
     expect(out).toContain("30");
   });
@@ -48,7 +47,6 @@ describe("calendarYear", () => {
 
   test("4列×3行構成である", () => {
     const out = calendarYear({ year: 2026 });
-    // 1行目に4ヶ月分のタイトル（1-4月）が含まれる
     const firstLine = out.split("\n")[0]!;
     expect(firstLine).toContain("January 2026");
     expect(firstLine).toContain("February 2026");
