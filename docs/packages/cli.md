@@ -77,6 +77,10 @@ typescript-calendar 2026 9                # September 2026
 --theme <name>           Look: default | modern (default: default)
 --color-scheme <name>    Colors: default | ocean | forest | sunset | mono
 --color                  Enable ANSI colors
+--locale <lang>          Language: en | ja (default: en)
+--week-start <day>       First weekday: sunday | monday (default: sunday)
+--highlight <YYYY-MM-DD> Highlight a date (e.g. 2026-09-08)
+--highlight-style <style> Highlight style: bracket | reverse (default: bracket)
 -h, --help               Show this help
 ```
 
@@ -84,6 +88,12 @@ Example with `modern` theme and `ocean` color scheme:
 
 ```sh
 typescript-calendar 2026 9 --theme modern --color-scheme ocean --color
+```
+
+Localized, Monday-start, with a highlighted date:
+
+```sh
+typescript-calendar 2026 9 --locale ja --week-start monday --highlight 2026-09-08
 ```
 
 ## Themes
