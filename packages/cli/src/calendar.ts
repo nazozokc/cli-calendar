@@ -4,7 +4,7 @@ import type {
   CalendarRangeOptions,
 } from "@typescript-calendar/core";
 import { getMonthRange } from "@typescript-calendar/core";
-import { renderMonth } from "./render.ts";
+import { renderMonth, renderYear } from "./render.ts";
 
 /**
  * 月カレンダーをテキストで返す
@@ -45,52 +45,14 @@ export function calendarYear(options: CalendarYearOptions): string {
     color = false,
   } = options;
 
-  const renderOpts = {
+  return renderYear(year, {
     locale,
     weekStart,
     highlight,
     highlightStyle,
     range,
     color,
-  };
-
-  const months: string[] = [];
-  for (let m = 1; m <= 12; m++) {
-    months.push(renderMonth(year, m, renderOpts));
-  }
-
-  const monthLines = months.map((m) => m.split("\n"));
-  const maxLines = Math.max(...monthLines.map((l) => l.length));
-
-  const colWidths = monthLines.map((lines) =>
-    Math.max(...lines.map((l) => l.length)),
-  );
-
-  const result: string[] = [];
-  for (let row = 0; row < 3; row++) {
-    const rowLines: string[] = [];
-    for (let lineIdx = 0; lineIdx < maxLines; lineIdx++) {
-      const parts: string[] = [];
-      for (let col = 0; col < 4; col++) {
-        const monthIdx = row * 4 + col;
-        if (monthIdx >= 12) {
-          parts.push("");
-          continue;
-        }
-        const lines = monthLines[monthIdx]!;
-        const line = lines[lineIdx] ?? "";
-        parts.push(line.padEnd(colWidths[monthIdx]!));
-      }
-      rowLines.push(parts.join("    "));
-    }
-    result.push(rowLines.join("\n"));
-
-    if (row < 2) {
-      result.push("");
-    }
-  }
-
-  return result.join("\n");
+  });
 }
 
 /**
@@ -110,16 +72,14 @@ export function calendarRange(options: CalendarRangeOptions): string {
 
   const months = getMonthRange(from, to);
 
-  const renderOpts = {
-    locale,
-    weekStart,
-    highlight,
-    highlightStyle,
-    range,
-    color,
-  };
-
   return months
-    .map(({ year, month }) => renderMonth(year, month, renderOpts))
+    .map(({ year, month }) => renderMonth(year, month, {
+      locale,
+      weekStart,
+      highlight,
+      highlightStyle,
+      range,
+      color,
+    }))
     .join("\n\n");
 }
