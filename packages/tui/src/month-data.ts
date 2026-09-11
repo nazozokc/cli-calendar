@@ -5,11 +5,7 @@ import {
   isDateInRange,
   isSameDay,
 } from "@typescript-calendar/core";
-import type {
-  CalendarCell,
-  MonthData,
-  MonthDataOptions,
-} from "./types.ts";
+import type { CalendarCell, MonthData, MonthDataOptions } from "./types.ts";
 
 /**
  * 月カレンダーの完全なデータを構築する。
@@ -64,7 +60,10 @@ export function buildMonthData(
 
   // 末尾の全 null 行を除外した行数
   let visibleRows = cells.length;
-  while (visibleRows > 0 && cells[visibleRows - 1]!.every((c) => c.day === null)) {
+  while (
+    visibleRows > 0 &&
+    cells[visibleRows - 1]!.every((c) => c.day === null)
+  ) {
     visibleRows--;
   }
 

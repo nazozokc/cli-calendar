@@ -1,7 +1,7 @@
-import type { CalendarState, CalendarStateOptions } from "./types.ts";
-import { buildMonthData } from "./month-data.ts";
 import { clampCursor, findFirstDayCell, findTodayCell } from "./cursor.ts";
+import { buildMonthData } from "./month-data.ts";
 import { resolveOptions } from "./options.ts";
+import type { CalendarState, CalendarStateOptions } from "./types.ts";
 
 // ─── 状態生成 ────────────────────────────────────────────
 

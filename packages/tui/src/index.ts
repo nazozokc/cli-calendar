@@ -1,41 +1,42 @@
-export type {
-  CalendarCell,
-  MonthData,
-  MonthDataOptions,
-  CalendarStateOptions,
-  CalendarState,
-  ResolvedOptions,
-  Direction,
-  MonthDirection,
-} from "./types.ts";
-
-export { buildMonthData } from "./month-data.ts";
-
-export { createCalendarState } from "./state.ts";
-
-export { navigateMonth, navigateYear, goToMonth, goToDate, goToToday } from "./navigation.ts";
-
 export {
-  moveCursor,
-  setCursorToDate,
-  getCursorDate,
-  selectDate,
-  getSelectedDate,
   clearSelection,
+  getCursorDate,
+  getSelectedDate,
+  moveCursor,
+  selectDate,
+  setCursorToDate,
 } from "./cursor.ts";
 
+export { buildMonthData } from "./month-data.ts";
+export {
+  goToDate,
+  goToMonth,
+  goToToday,
+  navigateMonth,
+  navigateYear,
+} from "./navigation.ts";
+export { createCalendarState } from "./state.ts";
 export type {
-  ThemeName,
-  ColorSchemeName,
-  Theme,
-  FrameChars,
   CellStyle,
   ColorScheme,
+  ColorSchemeName,
+  FrameChars,
+  Theme,
+  ThemeName,
 } from "./theme.ts";
-
 export {
-  THEMES,
   COLOR_SCHEMES,
-  resolveTheme,
   resolveColorScheme,
+  resolveTheme,
+  THEMES,
 } from "./theme.ts";
+export type {
+  CalendarCell,
+  CalendarState,
+  CalendarStateOptions,
+  Direction,
+  MonthData,
+  MonthDataOptions,
+  MonthDirection,
+  ResolvedOptions,
+} from "./types.ts";

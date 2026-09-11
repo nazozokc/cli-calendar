@@ -64,7 +64,12 @@ export function resolveTheme(theme?: ThemeName | Theme): Theme {
 // ─── カラースキーム ───────────────────────────────────────
 
 /** 組み込みカラースキーム名。カスタムは ColorScheme を直接渡せる */
-export type ColorSchemeName = "default" | "ocean" | "forest" | "sunset" | "mono";
+export type ColorSchemeName =
+  | "default"
+  | "ocean"
+  | "forest"
+  | "sunset"
+  | "mono";
 
 /** 1要素のスタイル（ANSIコードや装飾フラグ。undefined は既定のまま） */
 export interface CellStyle {

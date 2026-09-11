@@ -1,10 +1,10 @@
+import { clampCursor, findDateCell, findTodayCell } from "./cursor.ts";
+import { buildMonthData } from "./month-data.ts";
 import type {
   CalendarState,
   MonthDirection,
   ResolvedOptions,
 } from "./types.ts";
-import { buildMonthData } from "./month-data.ts";
-import { clampCursor, findDateCell, findTodayCell } from "./cursor.ts";
 
 // ─── 日付計算 ────────────────────────────────────────────
 
@@ -12,7 +12,7 @@ import { clampCursor, findDateCell, findTodayCell } from "./cursor.ts";
 export function shiftMonth(year: number, month: number, delta: number) {
   const total = year * 12 + (month - 1) + delta;
   const newYear = Math.floor(total / 12);
-  const newMonth = ((total % 12) + 12) % 12 + 1;
+  const newMonth = (((total % 12) + 12) % 12) + 1;
   return { year: newYear, month: newMonth };
 }
 

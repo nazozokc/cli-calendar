@@ -1,4 +1,4 @@
-import { test, expect, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import { calendar, calendarRange, calendarYear } from "./calendar.ts";
 
 describe("calendar", () => {
@@ -37,9 +37,18 @@ describe("calendarYear", () => {
   test("12ヶ月全てのタイトルを含む", () => {
     const out = calendarYear({ year: 2026 });
     for (const m of [
-      "January", "February", "March", "April",
-      "May", "June", "July", "August",
-      "September", "October", "November", "December",
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ]) {
       expect(out).toContain(`${m} 2026`);
     }
@@ -78,7 +87,9 @@ describe("calendarRange", () => {
       from: new Date(2026, 8, 1),
       to: new Date(2026, 8, 30),
     });
-    const count = out.split("\n").filter((l) => l.includes("September 2026")).length;
+    const count = out
+      .split("\n")
+      .filter((l) => l.includes("September 2026")).length;
     expect(count).toBe(1);
   });
 

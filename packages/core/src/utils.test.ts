@@ -1,4 +1,4 @@
-import { test, expect, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import {
   buildMonthGrid,
   firstDayOfMonth,
@@ -93,7 +93,9 @@ describe("isDateInRange", () => {
 
 describe("isSameDay", () => {
   test("同じ日付はtrue", () => {
-    expect(isSameDay(new Date(2026, 8, 8, 3, 30), new Date(2026, 8, 8, 20, 0))).toBe(true);
+    expect(
+      isSameDay(new Date(2026, 8, 8, 3, 30), new Date(2026, 8, 8, 20, 0)),
+    ).toBe(true);
   });
 
   test("異なる日はfalse", () => {
@@ -107,29 +109,32 @@ describe("isSameDay", () => {
 
 describe("getMonthRange", () => {
   test("同月内は1件", () => {
-    expect(getMonthRange(new Date(2026, 8, 1), new Date(2026, 8, 30)))
-      .toEqual([{ year: 2026, month: 9 }]);
+    expect(getMonthRange(new Date(2026, 8, 1), new Date(2026, 8, 30))).toEqual([
+      { year: 2026, month: 9 },
+    ]);
   });
 
   test("複数月に跨る", () => {
-    expect(getMonthRange(new Date(2026, 5, 1), new Date(2026, 8, 30)))
-      .toEqual([
-        { year: 2026, month: 6 },
-        { year: 2026, month: 7 },
-        { year: 2026, month: 8 },
-        { year: 2026, month: 9 },
-      ]);
+    expect(getMonthRange(new Date(2026, 5, 1), new Date(2026, 8, 30))).toEqual([
+      { year: 2026, month: 6 },
+      { year: 2026, month: 7 },
+      { year: 2026, month: 8 },
+      { year: 2026, month: 9 },
+    ]);
   });
 
   test("12月から翌年1月に跨る", () => {
-    expect(getMonthRange(new Date(2025, 11, 31), new Date(2026, 0, 15)))
-      .toEqual([
-        { year: 2025, month: 12 },
-        { year: 2026, month: 1 },
-      ]);
+    expect(
+      getMonthRange(new Date(2025, 11, 31), new Date(2026, 0, 15)),
+    ).toEqual([
+      { year: 2025, month: 12 },
+      { year: 2026, month: 1 },
+    ]);
   });
 
   test("1年の範囲", () => {
-    expect(getMonthRange(new Date(2026, 0, 1), new Date(2026, 11, 31))).toHaveLength(12);
+    expect(
+      getMonthRange(new Date(2026, 0, 1), new Date(2026, 11, 31)),
+    ).toHaveLength(12);
   });
 });

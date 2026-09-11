@@ -4,9 +4,11 @@
   "type": "module",
   "main": "src/index.tsx",
   "types": "src/index.tsx",
+  "files": [
+    "src"
+  ],
   "dependencies": {
-    "@typescript-calendar/core": "workspace:*",
-    "react": "^19"
+    "@typescript-calendar/core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^19"

@@ -1,27 +1,24 @@
 export {
   calendar,
-  calendarYear,
   calendarRange,
+  calendarYear,
 } from "./calendar.ts";
-
+export type {
+  CliPalette,
+  CliTheme,
+  ColorSchemeName,
+  FrameChars,
+  ThemeName,
+} from "./theme.ts";
+export {
+  COLOR_SCHEMES,
+  resolveColorScheme,
+  resolveTheme,
+  THEMES,
+} from "./theme.ts";
 export type {
   CalendarOptions,
-  CalendarYearOptions,
   CalendarRangeOptions,
+  CalendarYearOptions,
   RenderMonthOptions,
 } from "./types.ts";
-
-export type {
-  ThemeName,
-  ColorSchemeName,
-  CliTheme,
-  CliPalette,
-  FrameChars,
-} from "./theme.ts";
-
-export {
-  THEMES,
-  COLOR_SCHEMES,
-  resolveTheme,
-  resolveColorScheme,
-} from "./theme.ts";

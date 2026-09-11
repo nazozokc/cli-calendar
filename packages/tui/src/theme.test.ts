@@ -1,5 +1,10 @@
-import { test, expect, describe } from "vitest";
-import { THEMES, COLOR_SCHEMES, resolveTheme, resolveColorScheme } from "./theme.ts";
+import { describe, expect, test } from "vitest";
+import {
+  COLOR_SCHEMES,
+  resolveColorScheme,
+  resolveTheme,
+  THEMES,
+} from "./theme.ts";
 
 describe("resolveTheme", () => {
   test("省略時は default", () => {

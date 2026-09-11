@@ -156,6 +156,21 @@ bun test
 
 The suite covers date utilities (leap years, month boundaries), locale headers, grid layout, highlight/range rendering, and public API integration.
 
+## Development
+
+```sh
+pnpm install
+pnpm hooks:install   # enable git hooks (commit message + typecheck/test)
+pnpm lint            # biome check
+pnpm typecheck
+pnpm test
+pnpm test:coverage   # vitest + v8 coverage report
+```
+
+Git hooks live in `.githooks/` and are enabled per-repo via `core.hooksPath`. The `pre-commit` hook runs a whitespace check, typecheck, and the full test suite; the `commit-msg` hook enforces conventional commit messages (`<type>: <summary>`). Code style and lint rules are enforced by [Biome](https://biomejs.dev/) (`biome.json`).
+
+CI (`.github/workflows/ci.yml`) runs typecheck and tests on Node 22/24, Biome lint, coverage (with configured thresholds), and a dry-run publish check on every PR and push to `main`. Dependabot keeps npm dependencies and GitHub Actions updated.
+
 ## License
 
 MIT

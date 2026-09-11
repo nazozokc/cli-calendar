@@ -1,11 +1,34 @@
 import type { CalendarOptions } from "@typescript-calendar/core";
-import { buildMonthGrid, getMonthName, getWeekdayHeaders, isDateInRange, isSameDay } from "@typescript-calendar/core";
+import {
+  buildMonthGrid,
+  getMonthName,
+  getWeekdayHeaders,
+  isDateInRange,
+  isSameDay,
+} from "@typescript-calendar/core";
 import type { CSSProperties } from "react";
-import type { ColorSchemeName, ReactColorScheme, ThemeName, ReactTheme } from "./themes.ts";
-import { resolveTheme, resolveColorScheme } from "./themes.ts";
+import type {
+  ColorSchemeName,
+  ReactColorScheme,
+  ReactTheme,
+  ThemeName,
+} from "./themes.ts";
+import { resolveColorScheme, resolveTheme } from "./themes.ts";
 import "./calendar.css";
 
-interface CalendarProps {
+/** 組み込みサイズ名 */
+export type CalendarSizeName = "sm" | "md" | "lg";
+
+/** カスタムセルサイズ。数値は px、文字列は CSS 長さのまま渡す */
+export interface CalendarCustomSize {
+  width?: number | string;
+  height?: number | string;
+}
+
+/** セルサイズ指定 */
+export type CalendarSize = CalendarSizeName | CalendarCustomSize;
+
+export interface CalendarProps {
   year: number;
   month: number;
   locale?: CalendarOptions["locale"];
@@ -19,6 +42,27 @@ interface CalendarProps {
   theme?: ThemeName | ReactTheme;
   /** カラースキーム。既定は "default" */
   colorScheme?: ColorSchemeName | ReactColorScheme;
+  /** セルサイズ。既定は "md"。{ width, height } で自由に指定できる */
+  size?: CalendarSize;
+  /** root 要素に追加するスタイル。CSS変数（--cal-*）で自由に上書きできる */
+  style?: CSSProperties;
+}
+
+function isSizeName(size: CalendarSize): size is CalendarSizeName {
+  return typeof size === "string";
+}
+
+function toCssLength(value: number | string): string {
+  return typeof value === "number" ? `${value}px` : value;
+}
+
+function buildSizeStyle(size: CalendarSize): CSSProperties {
+  if (isSizeName(size)) return {};
+  const style: Record<string, string> = {};
+  if (size.width !== undefined) style["--cal-cell-w"] = toCssLength(size.width);
+  if (size.height !== undefined)
+    style["--cal-cell-h"] = toCssLength(size.height);
+  return style;
 }
 
 /**
@@ -34,6 +78,8 @@ export function Calendar({
   today,
   theme = "default",
   colorScheme = "default",
+  size = "md",
+  style,
 }: CalendarProps) {
   const monthName = getMonthName(locale, month);
   const weekdays = getWeekdayHeaders(locale, weekStart);
@@ -47,15 +93,24 @@ export function Calendar({
     const classes: string[] = [];
     if (date.getDay() === 0 || date.getDay() === 6) classes.push("is-weekend");
     if (today !== undefined && isSameDay(date, today)) classes.push("is-today");
-    if (highlight !== undefined && isSameDay(date, highlight)) classes.push("is-highlight");
-    if (range !== undefined && isDateInRange(date, range)) classes.push("is-in-range");
+    if (highlight !== undefined && isSameDay(date, highlight))
+      classes.push("is-highlight");
+    if (range !== undefined && isDateInRange(date, range))
+      classes.push("is-in-range");
     return classes.join(" ");
   };
 
+  const sizeClass = isSizeName(size) ? ` calendar-size-${size}` : "";
+
   return (
-    <div className={`calendar ${resolvedTheme.className}`} style={cssVars}>
+    <div
+      className={`calendar ${resolvedTheme.className}${sizeClass}`}
+      style={{ ...cssVars, ...buildSizeStyle(size), ...style }}
+    >
       <div className="calendar-header">
-        <h2>{monthName} {year}</h2>
+        <h2>
+          {monthName} {year}
+        </h2>
       </div>
       <table>
         <thead>
@@ -69,14 +124,14 @@ export function Calendar({
           {grid.map((row, i) => {
             if (row.every((d) => d === null)) return null;
             return (
+              // biome-ignore lint/suspicious/noArrayIndexKey: 月グリッドは静的で並び順が変わらない
               <tr key={i}>
                 {row.map((day, j) => {
-                  if (day === null) return <td key={j} />;
+                  if (day === null)
+                    // biome-ignore lint/suspicious/noArrayIndexKey: パディングセルは位置が唯一の識別子
+                    return <td key={j} />;
                   return (
-                    <td
-                      key={j}
-                      className={className(day) || undefined}
-                    >
+                    <td key={day} className={className(day) || undefined}>
                       {day}
                     </td>
                   );
@@ -93,15 +148,15 @@ export function Calendar({
 export default Calendar;
 
 export type {
-  ThemeName,
-  ReactTheme,
   ColorSchemeName,
   ReactColorScheme,
+  ReactTheme,
+  ThemeName,
 } from "./themes.ts";
 
 export {
-  THEMES,
   COLOR_SCHEMES,
-  resolveTheme,
   resolveColorScheme,
+  resolveTheme,
+  THEMES,
 } from "./themes.ts";

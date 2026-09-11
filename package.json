@@ -2,9 +2,16 @@
   "name": "typescript-calendar",
   "private": true,
   "scripts": {
-    "test": "vitest run"
+    "hooks:install": "git config core.hooksPath .githooks",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.12",
+    "@vitest/coverage-v8": "^3.2.7",
     "typescript": "^5",
     "vitest": "^3"
   }

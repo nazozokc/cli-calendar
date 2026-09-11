@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import { calendar } from "./calendar.ts";
-import type { ThemeName, ColorSchemeName } from "./theme.ts";
+import type { ColorSchemeName, ThemeName } from "./theme.ts";
 
 const args = process.argv.slice(2);
 

@@ -1,10 +1,10 @@
-import type {
-  CalendarOptions,
-  CalendarYearOptions,
-  CalendarRangeOptions,
-} from "./types.ts";
 import { getMonthRange } from "@typescript-calendar/core";
 import { renderMonth, renderYear } from "./render.ts";
+import type {
+  CalendarOptions,
+  CalendarRangeOptions,
+  CalendarYearOptions,
+} from "./types.ts";
 
 /**
  * 月カレンダーをテキストで返す
@@ -88,16 +88,18 @@ export function calendarRange(options: CalendarRangeOptions): string {
   const months = getMonthRange(from, to);
 
   return months
-    .map(({ year, month }) => renderMonth(year, month, {
-      locale,
-      weekStart,
-      highlight,
-      highlightStyle,
-      range,
-      color,
-      theme,
-      colorScheme,
-      today,
-    }))
+    .map(({ year, month }) =>
+      renderMonth(year, month, {
+        locale,
+        weekStart,
+        highlight,
+        highlightStyle,
+        range,
+        color,
+        theme,
+        colorScheme,
+        today,
+      }),
+    )
     .join("\n\n");
 }

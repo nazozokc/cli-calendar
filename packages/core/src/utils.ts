@@ -34,7 +34,10 @@ export function buildMonthGrid(
   for (let week = 0; week < 6; week++) {
     const row: (number | null)[] = [];
     for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-      if ((week === 0 && dayOfWeek < startDayOfWeek) || currentDay > daysInMonth) {
+      if (
+        (week === 0 && dayOfWeek < startDayOfWeek) ||
+        currentDay > daysInMonth
+      ) {
         row.push(null);
       } else {
         row.push(currentDay);

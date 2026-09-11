@@ -1,6 +1,13 @@
-import { test, expect, describe } from "vitest";
+import { describe, expect, test } from "vitest";
+import {
+  clearSelection,
+  getCursorDate,
+  getSelectedDate,
+  moveCursor,
+  selectDate,
+  setCursorToDate,
+} from "./cursor.ts";
 import { createCalendarState } from "./state.ts";
-import { moveCursor, selectDate, getCursorDate, setCursorToDate, getSelectedDate, clearSelection } from "./cursor.ts";
 
 const TODAY = new Date(2026, 8, 15); // 2026-09-15
 
@@ -8,7 +15,10 @@ describe("moveCursor", () => {
   test("右に移動する", () => {
     const state = createCalendarState({ today: TODAY });
     const moved = moveCursor(state, "right");
-    expect(moved.cursor).toEqual({ row: state.cursor!.row, col: state.cursor!.col + 1 });
+    expect(moved.cursor).toEqual({
+      row: state.cursor!.row,
+      col: state.cursor!.col + 1,
+    });
   });
 
   test("左端から左に移動すると右端に折り返す", () => {
@@ -35,7 +45,10 @@ describe("moveCursor", () => {
       initialCursor: { row: 0, col: 2 },
     });
     const moved = moveCursor(state, "up");
-    expect(moved.cursor).toEqual({ row: state.monthData.visibleRows - 1, col: 2 });
+    expect(moved.cursor).toEqual({
+      row: state.monthData.visibleRows - 1,
+      col: 2,
+    });
   });
 
   test("下端から下に移動すると先頭行に折り返す", () => {

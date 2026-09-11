@@ -1,24 +1,22 @@
-export type {
-  Locale,
-  WeekStart,
-  HighlightStyle,
-  CalendarOptions,
-  CalendarYearOptions,
-  CalendarRangeOptions,
-  RenderMonthOptions,
-} from "./types.ts";
-
 export {
-  firstDayOfMonth,
-  lastDayOfMonth,
+  getMonthName,
+  getWeekdayHeaders,
+  LOCALES,
+} from "./locale.ts";
+export type {
+  CalendarOptions,
+  CalendarRangeOptions,
+  CalendarYearOptions,
+  HighlightStyle,
+  Locale,
+  RenderMonthOptions,
+  WeekStart,
+} from "./types.ts";
+export {
   buildMonthGrid,
+  firstDayOfMonth,
+  getMonthRange,
   isDateInRange,
   isSameDay,
-  getMonthRange,
+  lastDayOfMonth,
 } from "./utils.ts";
-
-export {
-  LOCALES,
-  getWeekdayHeaders,
-  getMonthName,
-} from "./locale.ts";

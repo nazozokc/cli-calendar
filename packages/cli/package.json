@@ -7,6 +7,10 @@
   },
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "files": [
+    "src",
+    "!src/*.test.ts"
+  ],
   "dependencies": {
     "@typescript-calendar/core": "workspace:*",
     "cli-table3": "^0.6.5"

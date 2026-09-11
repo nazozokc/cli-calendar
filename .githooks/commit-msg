@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+# Enforces the conventional commit format: <type>(<scope>)?!?: <summary>
+# See: https://www.conventionalcommits.org/
+
+COMMIT_MSG_FILE="$1"
+
+# Let git handle merge and revert commits untouched
+subject=$(sed -n '1p' "$COMMIT_MSG_FILE")
+case "$subject" in
+  Merge* | Revert*) exit 0 ;;
+esac
+
+if ! printf '%s\n' "$subject" |
+  grep -Eq '^(feat|fix|perf|refactor|docs|style|test|chore|build|ci)(\([a-z0-9-]+\))?!?: .+$'
+then
+  cat >&2 <<'EOF'
+✗ Invalid commit message format.
+
+Expected: <type>(<scope>)?!?: <summary>
+Examples:
+  feat: add year calendar
+  fix(cli): handle empty range
+  chore: update dependencies
+
+Allowed types: feat, fix, perf, refactor, docs, style, test, chore, build, ci
+EOF
+  exit 1
+fi

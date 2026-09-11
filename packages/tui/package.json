@@ -11,7 +11,10 @@
       "default": "./src/index.ts"
     }
   },
-  "files": ["src"],
+  "files": [
+    "src",
+    "!src/*.test.ts"
+  ],
   "keywords": [
     "calendar",
     "tui",

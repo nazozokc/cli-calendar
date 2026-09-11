@@ -1,7 +1,7 @@
 // ─── テーマ ───────────────────────────────────────────────
 
 /** 組み込みテーマ名。カスタムテーマは ReactTheme オブジェクトを直接渡せる */
-export type ThemeName = "default" | "modern";
+export type ThemeName = "default" | "modern" | "minimal" | "rounded" | "retro";
 
 /** React の見た目定義。テーマは主に CSS クラスで切り替える */
 export interface ReactTheme {
@@ -12,6 +12,9 @@ export interface ReactTheme {
 export const THEMES: Record<ThemeName, ReactTheme> = {
   default: { className: "calendar-theme-default" },
   modern: { className: "calendar-theme-modern" },
+  minimal: { className: "calendar-theme-minimal" },
+  rounded: { className: "calendar-theme-rounded" },
+  retro: { className: "calendar-theme-retro" },
 };
 
 export function resolveTheme(theme?: ThemeName | ReactTheme): ReactTheme {
@@ -23,7 +26,14 @@ export function resolveTheme(theme?: ThemeName | ReactTheme): ReactTheme {
 // ─── カラースキーム ───────────────────────────────────────
 
 /** 組み込みカラースキーム名。カスタムは CSS 変数マップを直接渡せる */
-export type ColorSchemeName = "default" | "ocean" | "forest" | "sunset" | "mono";
+export type ColorSchemeName =
+  | "default"
+  | "ocean"
+  | "forest"
+  | "sunset"
+  | "mono"
+  | "midnight"
+  | "blossom";
 
 /** CSS カスタムプロパティ（--cal-*）の値マップ */
 export type ReactColorScheme = Record<`--cal-${string}`, string>;
@@ -93,6 +103,32 @@ export const COLOR_SCHEMES: Record<ColorSchemeName, ReactColorScheme> = {
     "--cal-range-bg": "#f3f4f6",
     "--cal-today-bg": "#e5e7eb",
     "--cal-today-fg": "#111827",
+  },
+  midnight: {
+    "--cal-bg": "#0f172a",
+    "--cal-fg": "#e2e8f0",
+    "--cal-accent": "#38bdf8",
+    "--cal-weekend-fg": "#475569",
+    "--cal-border": "#1e293b",
+    "--cal-header-bg": "#1e293b",
+    "--cal-highlight-bg": "#38bdf8",
+    "--cal-highlight-fg": "#0f172a",
+    "--cal-range-bg": "#0c4a6e",
+    "--cal-today-bg": "#0c4a6e",
+    "--cal-today-fg": "#7dd3fc",
+  },
+  blossom: {
+    "--cal-bg": "#fffaff",
+    "--cal-fg": "#500724",
+    "--cal-accent": "#db2777",
+    "--cal-weekend-fg": "#f9a8d4",
+    "--cal-border": "#fbcfe8",
+    "--cal-header-bg": "#fdf2f8",
+    "--cal-highlight-bg": "#db2777",
+    "--cal-highlight-fg": "#ffffff",
+    "--cal-range-bg": "#fce7f3",
+    "--cal-today-bg": "#fdf2f8",
+    "--cal-today-fg": "#be185d",
   },
 };
 

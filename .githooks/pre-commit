@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# Runs quality gates before every commit: whitespace/conflict-marker check,
+# TypeScript typecheck, and the full test suite.
+
+set -eu
+
+# Reject trailing whitespace and leftover conflict markers in the staged diff
+git diff --cached --check
+
+echo "Running typecheck..."
+pnpm typecheck
+
+echo "Running tests..."
+pnpm test

@@ -1,4 +1,4 @@
-import { test, expect, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import { buildMonthData } from "./month-data.ts";
 
 const TODAY = new Date(2026, 8, 8); // 2026-09-08
@@ -7,7 +7,15 @@ describe("buildMonthData", () => {
   test("タイトルと曜日ヘッダーを含む", () => {
     const data = buildMonthData(2026, 9);
     expect(data.title).toBe("September 2026");
-    expect(data.weekdays).toEqual(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]);
+    expect(data.weekdays).toEqual([
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+    ]);
   });
 
   test("日本語ロケールと月曜始まりを反映する", () => {

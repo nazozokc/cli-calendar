@@ -1,7 +1,13 @@
-import { getMonthName, getWeekdayHeaders, buildMonthGrid, isDateInRange, isSameDay } from "@typescript-calendar/core";
-import type { RenderMonthOptions } from "./types.ts";
-import { resolveTheme, resolveColorScheme } from "./theme.ts";
+import {
+  buildMonthGrid,
+  getMonthName,
+  getWeekdayHeaders,
+  isDateInRange,
+  isSameDay,
+} from "@typescript-calendar/core";
 import type { CliPalette, FrameChars } from "./theme.ts";
+import { resolveColorScheme, resolveTheme } from "./theme.ts";
+import type { RenderMonthOptions } from "./types.ts";
 
 const CELL_WIDTH = 3;
 
@@ -38,14 +44,15 @@ export function renderMonth(
     // ── 枠なし（default） ──
     const sep = theme.separator;
     const totalWidth =
-      weekdays.length * theme.cellWidth +
-      (weekdays.length - 1) * sep.length;
+      weekdays.length * theme.cellWidth + (weekdays.length - 1) * sep.length;
 
     lines.push(centerText(title, totalWidth));
 
     lines.push(
       weekdays
-        .map((d) => colorize(d.padStart(theme.cellWidth), palette.weekday, color))
+        .map((d) =>
+          colorize(d.padStart(theme.cellWidth), palette.weekday, color),
+        )
         .join(sep),
     );
 
@@ -53,7 +60,17 @@ export function renderMonth(
       if (row.every((d) => d === null)) continue;
 
       const cells = row.map((day) =>
-        renderCell(year, month, day, highlight, highlightStyle, range, today, color, palette),
+        renderCell(
+          year,
+          month,
+          day,
+          highlight,
+          highlightStyle,
+          range,
+          today,
+          color,
+          palette,
+        ),
       );
 
       lines.push(cells.join(sep));
@@ -63,7 +80,11 @@ export function renderMonth(
     const frame = theme.frame;
 
     lines.push(
-      colorize(topBorder(frame, theme.cellWidth, weekdays.length), palette.frame, color),
+      colorize(
+        topBorder(frame, theme.cellWidth, weekdays.length),
+        palette.frame,
+        color,
+      ),
     );
     lines.push(
       colorize(
@@ -73,7 +94,11 @@ export function renderMonth(
       ),
     );
     lines.push(
-      colorize(separatorRow(frame, theme.cellWidth, weekdays.length), palette.frame, color),
+      colorize(
+        separatorRow(frame, theme.cellWidth, weekdays.length),
+        palette.frame,
+        color,
+      ),
     );
     lines.push(
       colorize(
@@ -83,21 +108,39 @@ export function renderMonth(
       ),
     );
     lines.push(
-      colorize(separatorRow(frame, theme.cellWidth, weekdays.length), palette.frame, color),
+      colorize(
+        separatorRow(frame, theme.cellWidth, weekdays.length),
+        palette.frame,
+        color,
+      ),
     );
 
     for (const row of grid) {
       if (row.every((d) => d === null)) continue;
 
       const cells = row.map((day) =>
-        renderCell(year, month, day, highlight, highlightStyle, range, today, color, palette),
+        renderCell(
+          year,
+          month,
+          day,
+          highlight,
+          highlightStyle,
+          range,
+          today,
+          color,
+          palette,
+        ),
       );
 
       lines.push(`${frame.v}${cells.join(frame.v)}${frame.v}`);
     }
 
     lines.push(
-      colorize(bottomBorder(frame, theme.cellWidth, weekdays.length), palette.frame, color),
+      colorize(
+        bottomBorder(frame, theme.cellWidth, weekdays.length),
+        palette.frame,
+        color,
+      ),
     );
   }
 
@@ -151,7 +194,11 @@ function renderCell(
 }
 
 /** ANSI コードを付与する（code が undefined ならそのまま） */
-function colorize(text: string, code: number | undefined, enabled: boolean): string {
+function colorize(
+  text: string,
+  code: number | undefined,
+  enabled: boolean,
+): string {
   if (!enabled || code === undefined) return text;
   return `\u001b[${code}m${text}\u001b[0m`;
 }
@@ -169,13 +216,21 @@ function topBorder(frame: FrameChars, cellWidth: number, cols: number): string {
 }
 
 /** 下枠: └────┴────...────┘ */
-function bottomBorder(frame: FrameChars, cellWidth: number, cols: number): string {
+function bottomBorder(
+  frame: FrameChars,
+  cellWidth: number,
+  cols: number,
+): string {
   const segments = Array<string>(cols).fill(frame.h.repeat(cellWidth));
   return `${frame.bottomLeft}${segments.join(frame.footJ)}${frame.bottomRight}`;
 }
 
 /** 区切り行: ├────┬────...┬────┤ */
-function separatorRow(frame: FrameChars, cellWidth: number, cols: number): string {
+function separatorRow(
+  frame: FrameChars,
+  cellWidth: number,
+  cols: number,
+): string {
   const segments = Array<string>(cols).fill(frame.h.repeat(cellWidth));
   return `├${segments.join(frame.j)}┤`;
 }

@@ -60,7 +60,12 @@ export function resolveTheme(theme?: ThemeName | CliTheme): CliTheme {
 // ─── カラースキーム ───────────────────────────────────────
 
 /** 組み込みカラースキーム名。カスタムは CliPalette を直接渡せる */
-export type ColorSchemeName = "default" | "ocean" | "forest" | "sunset" | "mono";
+export type ColorSchemeName =
+  | "default"
+  | "ocean"
+  | "forest"
+  | "sunset"
+  | "mono";
 
 /**
  * ANSIカラーパレット。

@@ -1,4 +1,4 @@
-import { test, expect, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import { getMonthName, getWeekdayHeaders, LOCALES } from "./locale.ts";
 
 describe("LOCALES", () => {
@@ -16,25 +16,49 @@ describe("LOCALES", () => {
 describe("getWeekdayHeaders", () => {
   test("英語・日曜始まりはSunから", () => {
     expect(getWeekdayHeaders("en", "sunday")).toEqual([
-      "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
     ]);
   });
 
   test("英語・月曜始まりはMonから", () => {
     expect(getWeekdayHeaders("en", "monday")).toEqual([
-      "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun",
     ]);
   });
 
   test("日本語・日曜始まりは日から", () => {
     expect(getWeekdayHeaders("ja", "sunday")).toEqual([
-      "日", "月", "火", "水", "木", "金", "土",
+      "日",
+      "月",
+      "火",
+      "水",
+      "木",
+      "金",
+      "土",
     ]);
   });
 
   test("日本語・月曜始まりは月から", () => {
     expect(getWeekdayHeaders("ja", "monday")).toEqual([
-      "月", "火", "水", "木", "金", "土", "日",
+      "月",
+      "火",
+      "水",
+      "木",
+      "金",
+      "土",
+      "日",
     ]);
   });
 });
