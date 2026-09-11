@@ -1,16 +1,15 @@
 {
-  "name": "@cli-calendar/react",
+  "name": "@typescript-calendar/react",
   "version": "0.1.1",
   "private": true,
   "type": "module",
   "main": "src/index.tsx",
   "types": "src/index.tsx",
   "dependencies": {
-    "@cli-calendar/core": "workspace:*",
+    "@typescript-calendar/core": "workspace:*",
     "react": "^19"
   },
   "devDependencies": {
-    "@types/bun": "latest",
     "@types/react": "^19"
   },
   "peerDependencies": {

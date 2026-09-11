@@ -1,12 +1,9 @@
 {
-  "name": "@cli-calendar/core",
+  "name": "@typescript-calendar/core",
   "version": "0.1.1",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
   "peerDependencies": {
     "typescript": "^5"
   }

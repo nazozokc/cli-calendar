@@ -1,15 +1,12 @@
 {
-  "name": "@cli-calendar/tui",
+  "name": "@typescript-calendar/tui",
   "version": "0.1.1",
   "private": true,
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
-    "@cli-calendar/core": "workspace:*"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
+    "@typescript-calendar/core": "workspace:*"
   },
   "peerDependencies": {
     "typescript": "^5"

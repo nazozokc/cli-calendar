@@ -1,5 +1,5 @@
-import type { CalendarOptions } from "@cli-calendar/core";
-import { buildMonthGrid, getMonthName, getWeekdayHeaders } from "@cli-calendar/core";
+import type { CalendarOptions } from "@typescript-calendar/core";
+import { buildMonthGrid, getMonthName, getWeekdayHeaders } from "@typescript-calendar/core";
 
 interface CalendarProps {
   year: number;

@@ -1,12 +1,11 @@
 {
-  "name": "cli-calendar",
+  "name": "typescript-calendar",
   "private": true,
-  "workspaces": ["packages/*"],
   "scripts": {
-    "test": "bun test"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3"
   }
 }

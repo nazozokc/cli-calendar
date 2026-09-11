@@ -4,7 +4,7 @@ import { calendar, calendarYear, calendarRange } from "./calendar.ts";
 const args = process.argv.slice(2);
 
 function printUsage() {
-  console.log(`Usage: cli-calendar [command] [options]
+  console.log(`Usage: typescript-calendar [command] [options]
 
 Commands:
   month [YYYY] [MM]     Render a single month (default: current)

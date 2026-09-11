@@ -1,5 +1,5 @@
-import type { RenderMonthOptions } from "@cli-calendar/core";
-import { getMonthName, getWeekdayHeaders, buildMonthGrid, isDateInRange, isSameDay } from "@cli-calendar/core";
+import type { RenderMonthOptions } from "@typescript-calendar/core";
+import { getMonthName, getWeekdayHeaders, buildMonthGrid, isDateInRange, isSameDay } from "@typescript-calendar/core";
 
 const CELL_WIDTH = 3;
 

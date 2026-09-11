@@ -1,4 +1,4 @@
-import { test, expect, describe } from "bun:test";
+import { test, expect, describe } from "vitest";
 import { calendar, calendarRange, calendarYear } from "./calendar.ts";
 
 describe("calendar", () => {
