@@ -1,0 +1,220 @@
+# @typescript-calendar/react
+
+A `<Calendar />` React component with CSS-based themes and color schemes. The component is fully controlled — you pass `year` and `month` and it renders the grid.
+
+::: warning Peer dependency
+Requires React 19. The package doesn't bundle React; install it in your app:
+
+```sh
+npm install react @typescript-calendar/react
+```
+:::
+
+## Installation
+
+```sh
+npm install @typescript-calendar/react
+# or
+bun add @typescript-calendar/react
+```
+
+## Quick Start
+
+```tsx
+import { Calendar } from "@typescript-calendar/react";
+
+export function App() {
+  return (
+    <Calendar
+      year={2026}
+      month={9}
+      colorScheme="ocean"
+      theme="modern"
+    />
+  );
+}
+```
+
+## Component API
+
+### `Calendar`
+
+```tsx
+<Calendar year={2026} month={9} />
+```
+
+| Prop | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `year` | `number` | — (required) | Calendar year |
+| `month` | `number` | — (required) | Month, 1-indexed (`1`–`12`) |
+| `locale` | `"en" \| "ja"` | `"en"` | Language |
+| `weekStart` | `"sunday" \| "monday"` | `"sunday"` | First day of the week |
+| `highlight` | `Date` | — | Date to highlight |
+| `range` | `{ from: Date; to: Date }` | — | Dates to emphasize |
+| `today` | `Date` | — | Reference date for "today" styling |
+| `theme` | `ThemeName \| ReactTheme` | `"default"` | CSS class-based theme |
+| `colorScheme` | `ColorSchemeName \| ReactColorScheme` | `"default"` | CSS variable-based colors |
+| `size` | `CalendarSize` | `"md"` | Cell size |
+| `style` | `CSSProperties` | — | Extra styles for the root element |
+
+The component exports as both named `Calendar` and default.
+
+## Themes
+
+### `ThemeName`
+
+```ts
+type ThemeName = "default" | "modern" | "minimal" | "rounded" | "retro";
+```
+
+Themes are implemented as CSS classes applied to the root element:
+
+- `calendar-theme-default`
+- `calendar-theme-modern`
+- `calendar-theme-minimal`
+- `calendar-theme-rounded`
+- `calendar-theme-retro`
+
+Pass a custom theme as an object:
+
+```tsx
+const myTheme: ReactTheme = { className: "my-calendar" };
+```
+
+### `ReactTheme`
+
+```ts
+interface ReactTheme {
+  className: string;
+}
+```
+
+### `THEMES` / `resolveTheme(theme?)`
+
+Predefined theme map and resolver.
+
+## Color Schemes
+
+### `ColorSchemeName`
+
+```ts
+type ColorSchemeName =
+  | "default" | "ocean" | "forest" | "sunset"
+  | "mono" | "midnight" | "blossom";
+```
+
+### `ReactColorScheme`
+
+A color scheme is a map of `--cal-*` CSS custom properties:
+
+```ts
+type ReactColorScheme = Record<`--cal-${string}`, string>;
+```
+
+Available variables:
+
+| Variable | Purpose |
+| :--- | :--- |
+| `--cal-bg` | Background |
+| `--cal-fg` | Foreground |
+| `--cal-accent` | Accent (highlight) |
+| `--cal-weekend-fg` | Weekend foreground |
+| `--cal-border` | Borders |
+| `--cal-header-bg` | Header background |
+| `--cal-highlight-bg` | Highlight background |
+| `--cal-highlight-fg` | Highlight foreground |
+| `--cal-range-bg` | Range background |
+| `--cal-today-bg` | Today background |
+| `--cal-today-fg` | Today foreground |
+
+Pass a custom scheme directly:
+
+```tsx
+const myScheme: ReactColorScheme = {
+  "--cal-bg": "#ffffff",
+  "--cal-fg": "#1e293b",
+  "--cal-accent": "#6366f1",
+  // ...all keys required
+};
+```
+
+### `COLOR_SCHEMES` / `resolveColorScheme(scheme?)`
+
+Predefined schemes and resolver.
+
+## Sizing
+
+### `CalendarSize`
+
+```ts
+type CalendarSizeName = "sm" | "md" | "lg";
+type CalendarCustomSize = {
+  width?: number | string;
+  height?: number | string;
+};
+type CalendarSize = CalendarSizeName | CalendarCustomSize;
+```
+
+Use preset sizes (`"sm" | "md" | "lg"`):
+
+```tsx
+<Calendar year={2026} month={9} size="lg" />
+```
+
+Or custom pixel sizes:
+
+```tsx
+<Calendar
+  year={2026}
+  month={9}
+  size={{ width: 48, height: 40 }}
+/>
+```
+
+Numbers are treated as pixels; strings pass through as CSS lengths (`"3rem"`, `"2.5em"`, etc.).
+
+## Styling with `style`
+
+The `style` prop can override any CSS variable or add custom styles:
+
+```tsx
+<Calendar
+  year={2026}
+  month={9}
+  style={{ "--cal-accent": "#8b5cf6", borderRadius: "1rem" } as React.CSSProperties}
+/>
+```
+
+## Cell Classes
+
+Each day cell gets semantic classes you can target with CSS:
+
+| Class | When |
+| :--- | :--- |
+| `is-weekend` | Saturday or Sunday |
+| `is-today` | Matches `today` |
+| `is-highlight` | Matches `highlight` |
+| `is-in-range` | Inside `range` |
+
+## Exports
+
+```ts
+import Calendar, {
+  Calendar,
+  COLOR_SCHEMES,
+  resolveColorScheme,
+  resolveTheme,
+  THEMES,
+} from "@typescript-calendar/react";
+
+import type {
+  CalendarCustomSize,
+  CalendarProps,
+  CalendarSize,
+  CalendarSizeName,
+  ColorSchemeName,
+  ReactColorScheme,
+  ReactTheme,
+  ThemeName,
+} from "@typescript-calendar/react";
+```
