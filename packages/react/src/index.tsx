@@ -121,31 +121,26 @@ export function Calendar({
                   if (day === null)
                     // biome-ignore lint/suspicious/noArrayIndexKey: パディングセルは位置が唯一の識別子
                     return <td key={j} />;
+                  const cellClass = className(day) || undefined;
+                  if (!interactive) {
+                    return (
+                      <td key={day} className={cellClass}>
+                        {day}
+                      </td>
+                    );
+                  }
                   return (
-                    <td
-                      key={day}
-                      className={className(day) || undefined}
-                      onClick={() => handleCellClick(day)}
-                      onKeyDown={
-                        interactive
-                          ? (e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                handleCellClick(day);
-                              }
-                            }
-                          : undefined
-                      }
-                      onMouseEnter={() => handleCellHover(day)}
-                      role={interactive ? "button" : undefined}
-                      tabIndex={interactive ? 0 : undefined}
-                      aria-label={
-                        interactive
-                          ? `${getMonthName(locale, month)} ${day}, ${year}`
-                          : undefined
-                      }
-                    >
-                      {day}
+                    <td key={day} className={cellClass}>
+                      <button
+                        type="button"
+                        className="calendar-day-btn"
+                        onClick={() => handleCellClick(day)}
+                        onMouseEnter={() => handleCellHover(day)}
+                        tabIndex={0}
+                        aria-label={`${getMonthName(locale, month)} ${day}, ${year}`}
+                      >
+                        {day}
+                      </button>
                     </td>
                   );
                 })}

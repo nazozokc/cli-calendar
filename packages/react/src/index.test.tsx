@@ -124,7 +124,7 @@ describe("useCalendarState", () => {
 // ─── Calendar component interaction ─────────────────────
 
 describe("Calendar interactive", () => {
-  test("interactive モードでセルに role=button がつく", () => {
+  test("interactive モードではセル内に button がレンダリングされる", () => {
     render(
       createElement(Calendar, {
         year: 2026,
@@ -133,11 +133,13 @@ describe("Calendar interactive", () => {
         today: TODAY,
       }),
     );
-    const cells = screen.getAllByRole("button");
-    expect(cells.length).toBeGreaterThan(0);
+    const buttons = screen.getAllByRole("button");
+    expect(buttons.length).toBeGreaterThan(0);
+    // テーブルセルのセマンティクスを保つため button は td の内側にある
+    expect(buttons[0]!.closest("td")).not.toBeNull();
   });
 
-  test("interactive でない場合は role=button がない", () => {
+  test("interactive でない場合は button がない", () => {
     const { container } = render(
       createElement(Calendar, {
         year: 2026,
@@ -145,8 +147,7 @@ describe("Calendar interactive", () => {
         today: TODAY,
       }),
     );
-    const buttons = container.querySelectorAll('[role="button"]');
-    expect(buttons).toHaveLength(0);
+    expect(container.querySelectorAll("button")).toHaveLength(0);
   });
 
   test("セルクリックで onDateClick が呼ばれる", () => {
@@ -195,7 +196,10 @@ describe("Calendar interactive", () => {
     );
     const cells = screen.getAllByRole("button");
     cells[0]!.focus();
+    // 実ブラウザではフォーカス中の button への Enter は click を発火する。
+    // jsdom はこの既定動作を実装していないため、keyDown 後の click で再現する。
     fireEvent.keyDown(cells[0]!, { key: "Enter" });
+    fireEvent.click(cells[0]!);
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
