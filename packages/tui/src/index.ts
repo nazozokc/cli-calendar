@@ -11,13 +11,12 @@ export type {
 
 export { buildMonthData } from "./month-data.ts";
 
+export { createCalendarState } from "./state.ts";
+
+export { navigateMonth, navigateYear, goToMonth, goToToday } from "./navigation.ts";
+
 export {
-  createCalendarState,
-  navigateMonth,
-  navigateYear,
-  goToMonth,
-  goToToday,
   moveCursor,
   getCursorDate,
   selectDate,
-} from "./state.ts";
+} from "./cursor.ts";
