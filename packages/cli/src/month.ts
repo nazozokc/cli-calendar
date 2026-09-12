@@ -5,7 +5,7 @@ import {
   isDateInRange,
   isSameDay,
 } from "@typescript-calendar/core";
-import { centerText, centerTextFull } from "./align.ts";
+import { centerText, centerTextFull, padStartWidth } from "./align.ts";
 import { colorize } from "./ansi.ts";
 import { bottomBorder, innerWidth, separatorRow, topBorder } from "./border.ts";
 import type { CliPalette } from "./theme.ts";
@@ -41,20 +41,27 @@ export function renderMonth(
   const weekdays = getWeekdayHeaders(locale, weekStart);
   const grid = buildMonthGrid(year, month, weekStart);
 
+  // bracket ハイライトは2桁の日付で `[10]` の4文字になるため、
+  // ハイライト中は全セルを4列に揃えて列ずれを防ぐ
+  const cellWidth =
+    highlight !== undefined && highlightStyle === "bracket"
+      ? CELL_WIDTH + 1
+      : CELL_WIDTH;
+
   const lines: string[] = [];
 
   if (theme.frame === null) {
     // ── 枠なし（default） ──
     const sep = theme.separator;
     const totalWidth =
-      weekdays.length * theme.cellWidth + (weekdays.length - 1) * sep.length;
+      weekdays.length * cellWidth + (weekdays.length - 1) * sep.length;
 
     lines.push(centerText(title, totalWidth));
 
     lines.push(
       weekdays
         .map((d) =>
-          colorize(d.padStart(theme.cellWidth), palette.weekday, color),
+          colorize(padStartWidth(d, cellWidth), palette.weekday, color),
         )
         .join(sep),
     );
@@ -73,6 +80,7 @@ export function renderMonth(
           today,
           color,
           palette,
+          cellWidth,
         ),
       );
 
@@ -84,35 +92,35 @@ export function renderMonth(
 
     lines.push(
       colorize(
-        topBorder(frame, theme.cellWidth, weekdays.length),
+        topBorder(frame, cellWidth, weekdays.length),
         palette.frame,
         color,
       ),
     );
     lines.push(
       colorize(
-        `${frame.v}${centerTextFull(title, innerWidth(theme.cellWidth, weekdays.length))}${frame.v}`,
+        `${frame.v}${centerTextFull(title, innerWidth(cellWidth, weekdays.length))}${frame.v}`,
         palette.title,
         color,
       ),
     );
     lines.push(
       colorize(
-        separatorRow(frame, theme.cellWidth, weekdays.length),
+        separatorRow(frame, cellWidth, weekdays.length),
         palette.frame,
         color,
       ),
     );
     lines.push(
       colorize(
-        `${frame.v}${weekdays.map((d) => d.padStart(theme.cellWidth)).join(frame.v)}${frame.v}`,
+        `${frame.v}${weekdays.map((d) => padStartWidth(d, cellWidth)).join(frame.v)}${frame.v}`,
         palette.weekday,
         color,
       ),
     );
     lines.push(
       colorize(
-        separatorRow(frame, theme.cellWidth, weekdays.length),
+        separatorRow(frame, cellWidth, weekdays.length),
         palette.frame,
         color,
       ),
@@ -132,6 +140,7 @@ export function renderMonth(
           today,
           color,
           palette,
+          cellWidth,
         ),
       );
 
@@ -140,7 +149,7 @@ export function renderMonth(
 
     lines.push(
       colorize(
-        bottomBorder(frame, theme.cellWidth, weekdays.length),
+        bottomBorder(frame, cellWidth, weekdays.length),
         palette.frame,
         color,
       ),
@@ -162,9 +171,10 @@ function renderCell(
   today: Date,
   color: boolean,
   palette: CliPalette,
+  cellWidth: number,
 ): string {
   if (day === null) {
-    return " ".repeat(CELL_WIDTH);
+    return " ".repeat(cellWidth);
   }
 
   const date = new Date(year, month - 1, day);
@@ -175,9 +185,9 @@ function renderCell(
 
   let text: string;
   if (isHighlight && highlightStyle === "bracket") {
-    text = `[${day}]`.padStart(CELL_WIDTH);
+    text = `[${day}]`.padStart(cellWidth);
   } else {
-    text = String(day).padStart(CELL_WIDTH);
+    text = String(day).padStart(cellWidth);
   }
 
   let code: number | undefined;

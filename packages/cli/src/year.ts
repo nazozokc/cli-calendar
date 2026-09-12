@@ -1,3 +1,4 @@
+import { visibleWidth } from "./ansi.ts";
 import { renderMonth } from "./month.ts";
 import type { RenderMonthOptions } from "./types.ts";
 
@@ -17,7 +18,7 @@ export function renderYear(
   const maxLines = Math.max(...monthLines.map((l) => l.length));
 
   const colWidths = monthLines.map((lines) =>
-    Math.max(...lines.map((l) => l.length)),
+    Math.max(...lines.map((l) => visibleWidth(l))),
   );
 
   const result: string[] = [];
@@ -33,7 +34,8 @@ export function renderYear(
         }
         const lines = monthLines[monthIdx]!;
         const line = lines[lineIdx] ?? "";
-        parts.push(line.padEnd(colWidths[monthIdx]!));
+        const pad = Math.max(0, colWidths[monthIdx]! - visibleWidth(line));
+        parts.push(line + " ".repeat(pad));
       }
       rowLines.push(parts.join("    "));
     }
