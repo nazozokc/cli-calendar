@@ -14,14 +14,22 @@ if (!result.success) {
   process.exit(1);
 }
 
+// GitHub Pages serves project sites under `/<repo>/`:
+// https://nazozokc.github.io/typescript-calendar/
+const PUBLISH_BASE = "/typescript-calendar";
+
 // The HTML-import manifest references client assets with relative paths
-// (e.g. `./chunk-xyz.js`), which break on nested routes like `/packages/core`.
-// Rewrite them to root-absolute paths in the emitted HTML.
+// (e.g. `./chunk-xyz.js`), which break on nested routes like `/packages/core`
+// and on the project-site base path. Rewrite them to root-absolute,
+// base-prefixed paths in the emitted HTML.
 const htmlPath = "./docs/dist/index.html";
 const html = await Bun.file(htmlPath).text();
 await Bun.write(
   htmlPath,
-  html.replace(/((?:src|href)=")\.\/([^"]+\.(?:js|css))"/g, '$1/$2"'),
+  html.replace(
+    /((?:src|href)=")\.\/([^"]+\.(?:js|css))"/g,
+    `$1${PUBLISH_BASE}/$2"`,
+  ),
 );
 
 console.log(`docs build: ${result.outputs.length} outputs -> docs/dist/`);

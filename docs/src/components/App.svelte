@@ -1,7 +1,7 @@
 <script lang="ts">
   import Home from "./Home.svelte";
   import Markdown from "./Markdown.svelte";
-  import { GITHUB_URL, PACKAGES, SIDEBAR } from "../nav";
+  import { GITHUB_URL, PACKAGES, SIDEBAR, withBase } from "../nav";
 
   let { path, html }: { path: string; html: string } = $props();
 
@@ -11,14 +11,14 @@
 </script>
 
 <header class="site-header">
-  <a class="brand" href="/">typescript-calendar</a>
+  <a class="brand" href={withBase("/")}>typescript-calendar</a>
   <nav class="site-nav">
-    <a href="/guide/getting-started">Guide</a>
+    <a href={withBase("/guide/getting-started")}>Guide</a>
     <details class="dropdown">
       <summary>Packages</summary>
       <div class="dropdown-menu">
         {#each PACKAGES as pkg}
-          <a href={pkg.link}>{pkg.text}</a>
+          <a href={withBase(pkg.link)}>{pkg.text}</a>
         {/each}
       </div>
     </details>
@@ -45,7 +45,7 @@
       <ul class="sidebar-links">
         {#each group.items as item}
           <li>
-            <a class:active={isActive(item.link)} href={item.link}>{item.text}</a>
+            <a class:active={isActive(item.link)} href={withBase(item.link)}>{item.text}</a>
           </li>
         {/each}
       </ul>
