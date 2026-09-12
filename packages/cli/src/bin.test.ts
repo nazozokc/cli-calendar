@@ -127,6 +127,25 @@ describe("parseArgs", () => {
     expect(result.error).toContain("Invalid --highlight");
   });
 
+  test("空の --highlight はエラー", () => {
+    const result = parseArgs(["--highlight", ""]);
+    expect(result.error).toContain("Invalid --highlight");
+  });
+
+  test("値必須オプションが最後の引数だとエラー", () => {
+    for (const opt of [
+      "--theme",
+      "--color-scheme",
+      "--locale",
+      "--week-start",
+      "--highlight",
+      "--highlight-style",
+    ]) {
+      const result = parseArgs([opt]);
+      expect(result.error).toContain(`Missing value for option: ${opt}`);
+    }
+  });
+
   test("不正な --highlight-style はエラー", () => {
     const result = parseArgs(["--highlight-style", "blink"]);
     expect(result.error).toContain("Invalid highlight-style");

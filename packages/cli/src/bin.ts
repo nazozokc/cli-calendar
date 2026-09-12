@@ -74,6 +74,10 @@ function validateChoice<T extends string>(
  */
 export function parseArgs(args: readonly string[]): ParseResult {
   const result: CliArgs = {};
+  const missing = (name: string): ParseResult => ({
+    args: result,
+    error: `Missing value for option: ${name}`,
+  });
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]!;
@@ -83,36 +87,52 @@ export function parseArgs(args: readonly string[]): ParseResult {
       case "-h":
       case "--help":
         return { args: result, help: true };
-      case "--theme":
-        result.theme = next() as ThemeName;
+      case "--theme": {
+        const value = next();
+        if (value === undefined) return missing("--theme");
+        result.theme = value as ThemeName;
         break;
-      case "--color-scheme":
-        result.colorScheme = next() as ColorSchemeName;
+      }
+      case "--color-scheme": {
+        const value = next();
+        if (value === undefined) return missing("--color-scheme");
+        result.colorScheme = value as ColorSchemeName;
         break;
+      }
       case "--color":
         result.color = true;
         break;
-      case "--locale":
-        result.locale = next() as Locale;
+      case "--locale": {
+        const value = next();
+        if (value === undefined) return missing("--locale");
+        result.locale = value as Locale;
         break;
-      case "--week-start":
-        result.weekStart = next() as WeekStart;
+      }
+      case "--week-start": {
+        const value = next();
+        if (value === undefined) return missing("--week-start");
+        result.weekStart = value as WeekStart;
         break;
+      }
       case "--highlight": {
-        const value = next() ?? "";
+        const value = next();
+        if (value === undefined) return missing("--highlight");
         const parsed = parseDate(value);
-        if (parsed === null && value !== "") {
+        if (parsed === null) {
           return {
             args: result,
             error: `Invalid --highlight date: "${value}" (expected YYYY-MM-DD, e.g. 2026-09-08)`,
           };
         }
-        result.highlight = parsed ?? undefined;
+        result.highlight = parsed;
         break;
       }
-      case "--highlight-style":
-        result.highlightStyle = next() as HighlightStyle;
+      case "--highlight-style": {
+        const value = next();
+        if (value === undefined) return missing("--highlight-style");
+        result.highlightStyle = value as HighlightStyle;
         break;
+      }
       default: {
         if (arg.startsWith("-")) {
           return { args: result, error: `Unknown option: ${arg}` };
