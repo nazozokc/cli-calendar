@@ -47,7 +47,7 @@ export interface MonthDataOptions {
   today?: Date;
   /** ハイライト対象日 */
   highlight?: Date;
-  /** 色付け範囲 */
+  /** 色付け範囲。from > to は自動で正規化される */
   range?: { from: Date; to: Date };
 }
 
@@ -55,7 +55,9 @@ export interface MonthDataOptions {
 
 /** createCalendarState に渡すオプション */
 export interface CalendarStateOptions {
+  /** 表示開始年。欠落時は today の年。NaN や非整数は RangeError */
   initialYear?: number;
+  /** 表示開始月 (1–12)。範囲外は正規化される（例: 13 → 翌年1月） */
   initialMonth?: number;
   /** 初期カーソル位置。null なら未フォーカス（矢印キーで今日 or 先頭日付にスナップ） */
   initialCursor?: { row: number; col: number } | null;
@@ -65,7 +67,7 @@ export interface CalendarStateOptions {
   weekStart?: WeekStart;
   /** ハイライト対象日 */
   highlight?: Date;
-  /** 色付け範囲 */
+  /** 色付け範囲。from > to は自動で正規化される */
   range?: { from: Date; to: Date };
 }
 

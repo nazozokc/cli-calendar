@@ -1,5 +1,6 @@
 import {
   buildMonthGrid,
+  createDate,
   getMonthName,
   getWeekdayHeaders,
   isDateInRange,
@@ -177,7 +178,7 @@ function renderCell(
     return " ".repeat(cellWidth);
   }
 
-  const date = new Date(year, month - 1, day);
+  const date = createDate(year, month - 1, day);
   const isHighlight = highlight !== undefined && isSameDay(date, highlight);
   const isInRange = isDateInRange(date, range);
   const isToday = isSameDay(date, today);

@@ -1,5 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { getCursorDate, moveCursor, setCursorToDate } from "./cursor.ts";
+import {
+  clampCursor,
+  getCursorDate,
+  moveCursor,
+  setCursorToDate,
+} from "./cursor.ts";
 import { clearSelection, getSelectedDate, selectDate } from "./selection.ts";
 import { createCalendarState } from "./state.ts";
 
@@ -134,6 +139,35 @@ describe("setCursorToDate", () => {
     const target = new Date(2026, 8, 1);
     const moved = setCursorToDate(state, target);
     expect(getCursorDate(moved)).toEqual(target);
+  });
+});
+
+describe("clampCursor の入力防御", () => {
+  test("NaN のカーソルは null を返す", () => {
+    const state = createCalendarState({ today: TODAY });
+    expect(clampCursor({ row: NaN, col: NaN }, state.monthData)).toBeNull();
+  });
+
+  test("Infinity のカーソルは null を返す", () => {
+    const state = createCalendarState({ today: TODAY });
+    expect(clampCursor({ row: Infinity, col: 0 }, state.monthData)).toBeNull();
+  });
+
+  test("小数は整数に切り捨ててクランプされる", () => {
+    const state = createCalendarState({ today: TODAY });
+    expect(clampCursor({ row: 1.7, col: 2.3 }, state.monthData)).toEqual({
+      row: 1,
+      col: 2,
+    });
+  });
+});
+
+describe("moveCursor の空グリッド防御", () => {
+  test("セルのないグリッドでは状態を変えず返す", () => {
+    const state = createCalendarState({ today: TODAY });
+    const emptyGrid = { ...state.monthData, cells: [], visibleRows: 0 };
+    const custom = { ...state, monthData: emptyGrid };
+    expect(moveCursor(custom, "up")).toBe(custom);
   });
 });
 

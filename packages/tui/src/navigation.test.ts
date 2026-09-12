@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { getCursorDate } from "./cursor.ts";
+import { shiftMonth } from "./month-math.ts";
 import {
   goToDate,
   goToMonth,
@@ -133,5 +134,29 @@ describe("goToMonth / goToToday", () => {
     const jumped = goToDate(selected, new Date(2026, 8, 20));
     expect(jumped.monthData.title).toBe("9月 2026");
     expect(jumped.selectedDate).toEqual(TODAY);
+  });
+});
+
+describe("ナビゲーションの入力検証", () => {
+  test("goToDate に Invalid Date を渡すと RangeError", () => {
+    const state = createCalendarState({ today: TODAY });
+    expect(() => goToDate(state, new Date("invalid"))).toThrow(RangeError);
+  });
+
+  test("goToMonth に NaN を渡すと RangeError", () => {
+    const state = createCalendarState({ today: TODAY });
+    expect(() => goToMonth(state, NaN, 5)).toThrow(RangeError);
+    expect(() => goToMonth(state, 2026, NaN)).toThrow(RangeError);
+  });
+
+  test("shiftMonth に NaN を渡すと RangeError", () => {
+    expect(() => shiftMonth(NaN, 5, 0)).toThrow(RangeError);
+    expect(() => shiftMonth(2026, NaN, 0)).toThrow(RangeError);
+    expect(() => shiftMonth(2026, 5, NaN)).toThrow(RangeError);
+  });
+
+  test("shiftMonth の delta で正規化される", () => {
+    expect(shiftMonth(2026, 12, 1)).toEqual({ year: 2027, month: 1 });
+    expect(shiftMonth(2026, 1, -1)).toEqual({ year: 2025, month: 12 });
   });
 });

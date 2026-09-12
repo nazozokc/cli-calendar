@@ -1,10 +1,13 @@
 import {
+  assertValidDate,
   buildMonthGrid,
+  createDate,
   getMonthName,
   getWeekdayHeaders,
   isDateInRange,
   isSameDay,
 } from "@typescript-calendar-lib/core";
+import { shiftMonth } from "./month-math.ts";
 import type { CalendarCell, MonthData, MonthDataOptions } from "./types.ts";
 
 /**
@@ -12,6 +15,9 @@ import type { CalendarCell, MonthData, MonthDataOptions } from "./types.ts";
  *
  * core の buildMonthGrid を包み、各セルにメタデータ（今日判定、ハイライト、範囲等）を付与する。
  * プレゼンテーション情報（色、スタイル）は含まない。
+ *
+ * `year`/`month` は shiftMonth で正規化される（例: month=13 → 翌年1月）。
+ * 不正な入力（NaN・非整数の年月、Invalid Date、未対応ロケール等）には RangeError を投げる。
  */
 export function buildMonthData(
   year: number,
@@ -26,9 +32,25 @@ export function buildMonthData(
     range,
   } = options;
 
-  const title = `${getMonthName(locale, month)} ${year}`;
+  // ─── 検証・正規化 ───────────────────────────────────
+  // 年月は整数検証 + 範囲 (MIN_YEAR..MAX_YEAR) クランプ、ロケール/曜日は core 側で検証される
+  const { year: ny, month: nm } = shiftMonth(year, month, 0);
+  assertValidDate(today);
+  if (highlight !== undefined) assertValidDate(highlight);
+
+  let normalizedRange = range;
+  if (range !== undefined) {
+    assertValidDate(range.from);
+    assertValidDate(range.to);
+    // from > to は範囲指定の逆転として扱い、正規化する
+    if (range.from.getTime() > range.to.getTime()) {
+      normalizedRange = { from: range.to, to: range.from };
+    }
+  }
+
+  const title = `${getMonthName(locale, nm)} ${ny}`;
   const weekdays = getWeekdayHeaders(locale, weekStart);
-  const rawGrid = buildMonthGrid(year, month, weekStart);
+  const rawGrid = buildMonthGrid(ny, nm, weekStart);
 
   const cells: CalendarCell[][] = rawGrid.map((row) =>
     row.map((day, dayOfWeek) => {
@@ -44,7 +66,7 @@ export function buildMonthData(
         };
       }
 
-      const date = new Date(year, month - 1, day);
+      const date = createDate(ny, nm - 1, day);
 
       return {
         day,
@@ -53,7 +75,7 @@ export function buildMonthData(
         isCurrentMonth: true,
         isToday: isSameDay(date, today),
         isHighlight: highlight !== undefined && isSameDay(date, highlight),
-        isInRange: isDateInRange(date, range),
+        isInRange: isDateInRange(date, normalizedRange),
       };
     }),
   );
@@ -67,5 +89,5 @@ export function buildMonthData(
     visibleRows--;
   }
 
-  return { year, month, title, weekdays, cells, visibleRows };
+  return { year: ny, month: nm, title, weekdays, cells, visibleRows };
 }

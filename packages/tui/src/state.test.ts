@@ -44,4 +44,35 @@ describe("createCalendarState", () => {
     const state = createCalendarState({ today: TODAY, locale: "ja" });
     expect(state.monthData.title).toBe("9月 2026");
   });
+
+  test("initialMonth 13 は翌年1月に正規化される", () => {
+    const state = createCalendarState({ today: TODAY, initialMonth: 13 });
+    expect(state.year).toBe(2027);
+    expect(state.month).toBe(1);
+    // 状態と月データの不整合が起きない
+    expect(state.monthData.year).toBe(2027);
+    expect(state.monthData.month).toBe(1);
+  });
+
+  test("initialMonth 0 は前年12月に正規化される", () => {
+    const state = createCalendarState({ today: TODAY, initialMonth: 0 });
+    expect(state.year).toBe(2025);
+    expect(state.month).toBe(12);
+  });
+
+  test("initialYear と組み合わせても正規化される", () => {
+    const state = createCalendarState({
+      today: TODAY,
+      initialYear: 2024,
+      initialMonth: 13,
+    });
+    expect(state.year).toBe(2025);
+    expect(state.month).toBe(1);
+  });
+
+  test("Invalid Date の today は RangeError", () => {
+    expect(() => createCalendarState({ today: new Date("invalid") })).toThrow(
+      RangeError,
+    );
+  });
 });

@@ -55,6 +55,20 @@ describe("buildMonthGrid", () => {
     expect(grid[0]).toEqual([null, 1, 2, 3, 4, 5, 6]);
   });
 
+  test("year 0-99 でも正しい年のグリッドになる", () => {
+    // 0050-01-01 は土曜 → 日曜始まりの1行目は7列目に1が入る
+    // （1950-01-01 は日曜なので [1,2,3,4,5,6,7] になり、これと区別できる）
+    expect(buildMonthGrid(50, 1, "sunday")[0]).toEqual([
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      1,
+    ]);
+  });
+
   test("日付の日数が月末を超えない", () => {
     const grid = buildMonthGrid(2026, 2, "sunday");
     const flat = grid.flat().filter((d) => d !== null);
