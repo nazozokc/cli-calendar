@@ -215,6 +215,7 @@ Use preset sizes (`"sm" | "md" | "lg"`):
 
 Or custom pixel sizes:
 
+{% raw %}
 ```tsx
 <Calendar
   year={2026}
@@ -222,6 +223,7 @@ Or custom pixel sizes:
   size={{ width: 48, height: 40 }}
 />
 ```
+{% endraw %}
 
 Numbers are treated as pixels; strings pass through as CSS lengths (`"3rem"`, `"2.5em"`, etc.).
 
@@ -229,6 +231,7 @@ Numbers are treated as pixels; strings pass through as CSS lengths (`"3rem"`, `"
 
 The `style` prop can override any CSS variable or add custom styles:
 
+{% raw %}
 ```tsx
 <Calendar
   year={2026}
@@ -236,6 +239,7 @@ The `style` prop can override any CSS variable or add custom styles:
   style={{ "--cal-accent": "#8b5cf6", borderRadius: "1rem" } as React.CSSProperties}
 />
 ```
+{% endraw %}
 
 ## Cell Classes
 
