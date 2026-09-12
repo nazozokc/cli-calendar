@@ -54,6 +54,14 @@ describe("moveCursor", () => {
     expect(moved.cursor).toEqual({ row: 0, col: 2 });
   });
 
+  test("範囲外のカーソルをクランプする（上方）", () => {
+    const state = createCalendarState({
+      today: TODAY,
+      initialCursor: { row: -3, col: -5 },
+    });
+    expect(state.cursor).toEqual({ row: 0, col: 0 });
+  });
+
   test("カーソル未設定時は今日のセルにスナップする", () => {
     const state = createCalendarState({
       today: TODAY,

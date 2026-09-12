@@ -12,8 +12,8 @@ export function clampCursor(
   const maxRow = Math.max(0, monthData.visibleRows - 1);
   const maxCol = Math.max(0, (monthData.cells[0]?.length ?? 7) - 1);
   return {
-    row: Math.min(cursor.row, maxRow),
-    col: Math.min(cursor.col, maxCol),
+    row: Math.max(0, Math.min(cursor.row, maxRow)),
+    col: Math.max(0, Math.min(cursor.col, maxCol)),
   };
 }
 
