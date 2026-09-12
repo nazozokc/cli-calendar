@@ -2,14 +2,25 @@ import { describe, expect, test } from "vitest";
 import { getMonthName, getWeekdayHeaders, LOCALES } from "./locale.ts";
 
 describe("LOCALES", () => {
-  test("12ヶ月分の月名を持つ", () => {
-    expect(LOCALES.en.months).toHaveLength(12);
-    expect(LOCALES.ja.months).toHaveLength(12);
+  test("全ロケールが12ヶ月分の月名を持つ", () => {
+    for (const locale of Object.keys(LOCALES) as (keyof typeof LOCALES)[]) {
+      expect(LOCALES[locale].months).toHaveLength(12);
+    }
   });
 
-  test("7曜日のヘッダを持つ", () => {
-    expect(LOCALES.en.weekdays).toHaveLength(7);
-    expect(LOCALES.ja.weekdays).toHaveLength(7);
+  test("全ロケールが7曜日のヘッダを持つ", () => {
+    for (const locale of Object.keys(LOCALES) as (keyof typeof LOCALES)[]) {
+      expect(LOCALES[locale].weekdays).toHaveLength(7);
+      expect(LOCALES[locale].weekdaysShort).toHaveLength(7);
+      expect(LOCALES[locale].weekdaysMonday).toHaveLength(7);
+      expect(LOCALES[locale].weekdaysMondayShort).toHaveLength(7);
+    }
+  });
+
+  test("日本語以外のロケールが存在する", () => {
+    expect(Object.keys(LOCALES)).toEqual(
+      expect.arrayContaining(["en", "ja", "es", "de", "fr", "ko", "zh"]),
+    );
   });
 });
 
@@ -61,6 +72,66 @@ describe("getWeekdayHeaders", () => {
       "日",
     ]);
   });
+
+  test("スペイン語・日曜始まり", () => {
+    expect(getWeekdayHeaders("es", "sunday")).toEqual([
+      "dom",
+      "lun",
+      "mar",
+      "mié",
+      "jue",
+      "vie",
+      "sáb",
+    ]);
+  });
+
+  test("ドイツ語・月曜始まり", () => {
+    expect(getWeekdayHeaders("de", "monday")).toEqual([
+      "Mo",
+      "Di",
+      "Mi",
+      "Do",
+      "Fr",
+      "Sa",
+      "So",
+    ]);
+  });
+
+  test("フランス語・日曜始まり", () => {
+    expect(getWeekdayHeaders("fr", "sunday")).toEqual([
+      "dim.",
+      "lun.",
+      "mar.",
+      "mer.",
+      "jeu.",
+      "ven.",
+      "sam.",
+    ]);
+  });
+
+  test("韓国語・月曜始まり", () => {
+    expect(getWeekdayHeaders("ko", "monday")).toEqual([
+      "월",
+      "화",
+      "수",
+      "목",
+      "금",
+      "토",
+      "일",
+    ]);
+  });
+
+  test("中国語・月曜始まり", () => {
+    expect(getWeekdayHeaders("zh", "monday")).toEqual([
+      "一",
+      "二",
+      "三",
+      "四",
+      "五",
+      "六",
+      "日",
+    ]);
+  });
 });
 
 describe("getMonthName", () => {
@@ -73,5 +144,32 @@ describe("getMonthName", () => {
   test("日本語の月名", () => {
     expect(getMonthName("ja", 1)).toBe("1月");
     expect(getMonthName("ja", 12)).toBe("12月");
+  });
+
+  test("スペイン語の月名", () => {
+    expect(getMonthName("es", 1)).toBe("enero");
+    expect(getMonthName("es", 9)).toBe("septiembre");
+    expect(getMonthName("es", 12)).toBe("diciembre");
+  });
+
+  test("ドイツ語の月名", () => {
+    expect(getMonthName("de", 1)).toBe("Januar");
+    expect(getMonthName("de", 3)).toBe("März");
+    expect(getMonthName("de", 12)).toBe("Dezember");
+  });
+
+  test("フランス語の月名", () => {
+    expect(getMonthName("fr", 1)).toBe("janvier");
+    expect(getMonthName("fr", 8)).toBe("août");
+  });
+
+  test("韓国語の月名", () => {
+    expect(getMonthName("ko", 1)).toBe("1월");
+    expect(getMonthName("ko", 12)).toBe("12월");
+  });
+
+  test("中国語の月名", () => {
+    expect(getMonthName("zh", 1)).toBe("一月");
+    expect(getMonthName("zh", 12)).toBe("十二月");
   });
 });

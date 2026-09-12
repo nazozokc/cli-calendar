@@ -1,12 +1,6 @@
 import { describe, expect, test } from "vitest";
-import {
-  clearSelection,
-  getCursorDate,
-  getSelectedDate,
-  moveCursor,
-  selectDate,
-  setCursorToDate,
-} from "./cursor.ts";
+import { getCursorDate, moveCursor, setCursorToDate } from "./cursor.ts";
+import { clearSelection, getSelectedDate, selectDate } from "./selection.ts";
 import { createCalendarState } from "./state.ts";
 
 const TODAY = new Date(2026, 8, 15); // 2026-09-15
@@ -58,6 +52,14 @@ describe("moveCursor", () => {
     });
     const moved = moveCursor(state, "down");
     expect(moved.cursor).toEqual({ row: 0, col: 2 });
+  });
+
+  test("範囲外のカーソルをクランプする（上方）", () => {
+    const state = createCalendarState({
+      today: TODAY,
+      initialCursor: { row: -3, col: -5 },
+    });
+    expect(state.cursor).toEqual({ row: 0, col: 0 });
   });
 
   test("カーソル未設定時は今日のセルにスナップする", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { getCursorDate, selectDate } from "./cursor.ts";
+import { getCursorDate } from "./cursor.ts";
 import {
   goToDate,
   goToMonth,
@@ -7,6 +7,7 @@ import {
   navigateMonth,
   navigateYear,
 } from "./navigation.ts";
+import { selectDate } from "./selection.ts";
 import { createCalendarState } from "./state.ts";
 
 const TODAY = new Date(2026, 8, 15); // 2026-09-15

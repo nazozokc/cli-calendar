@@ -25,7 +25,7 @@ describe("renderMonth", () => {
 
   test("日本語ロケールの月名", () => {
     const lines = renderMonth(2026, 9, { locale: "ja" }).split("\n");
-    expect(lines[0]).toBe("          9月 2026");
+    expect(lines[0]).toBe("         9月 2026");
   });
 });
 
@@ -97,8 +97,18 @@ describe("renderMonth - themes", () => {
       highlight: new Date(2026, 8, 8),
       ...base,
     });
-    expect(out).toContain("│[8]│");
-    expect(out).toContain("│ 30│");
+    expect(out).toContain("│ [8]│");
+    expect(out).toContain("│  30│");
+  });
+
+  test("bracketスタイルの2桁日付はセル幅に収まる", () => {
+    const out = renderMonth(2026, 9, {
+      theme: "modern",
+      highlight: new Date(2026, 8, 10),
+      ...base,
+    });
+    expect(out).toContain("│[10]│");
+    expect(out).toContain("│  30│");
   });
 
   test("modernテーマとカラースキームで枠と曜日が着色される", () => {

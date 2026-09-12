@@ -47,6 +47,12 @@ Sun Mon Tue Wed Thu Fri Sat
  27  28  29  30
 ```
 
+Locales: `en`, `ja`, `es`, `de`, `fr`, `ko`, `zh`
+
+```ts
+calendar({ year: 2026, month: 9, locale: "es", weekStart: "monday" });
+```
+
 ### React Component
 
 ```tsx
@@ -56,6 +62,8 @@ function App() {
   return <Calendar year={2026} month={9} colorScheme="ocean" />;
 }
 ```
+
+For interactivity (click, hover, cursor, month navigation), see the [Interactive Demo](/guide/interactive-demo).
 
 ### TUI (Headless)
 

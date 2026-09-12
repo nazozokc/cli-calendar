@@ -1,4 +1,4 @@
-export type Locale = "en" | "ja";
+export type Locale = "en" | "ja" | "es" | "de" | "fr" | "ko" | "zh";
 export type WeekStart = "sunday" | "monday";
 export type HighlightStyle = "bracket" | "reverse";
 

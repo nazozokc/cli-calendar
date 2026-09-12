@@ -1,10 +1,7 @@
-import { clampCursor, findDateCell, findTodayCell } from "./cursor.ts";
 import { buildMonthData } from "./month-data.ts";
-import type {
-  CalendarState,
-  MonthDirection,
-  ResolvedOptions,
-} from "./types.ts";
+import { findDateCell, findTodayCell } from "./search.ts";
+import { rebuildState } from "./state.ts";
+import type { CalendarState, MonthDirection } from "./types.ts";
 
 // ─── 日付計算 ────────────────────────────────────────────
 
@@ -16,25 +13,6 @@ export function shiftMonth(year: number, month: number, delta: number) {
   return { year: newYear, month: newMonth };
 }
 
-/** カーソル/選択状態を保ったまま、新しい年月で状態を再構築する */
-function rebuild(
-  year: number,
-  month: number,
-  cursor: { row: number; col: number } | null,
-  selectedDate: Date | null,
-  options: ResolvedOptions,
-): CalendarState {
-  const monthData = buildMonthData(year, month, options);
-  return {
-    year,
-    month,
-    cursor: clampCursor(cursor, monthData),
-    selectedDate,
-    options,
-    monthData,
-  };
-}
-
 // ─── 公開API ─────────────────────────────────────────────
 
 /** 前月/翌月へ移動する（カーソルは新しい月の範囲にクランプされる） */
@@ -44,7 +22,13 @@ export function navigateMonth(
 ): CalendarState {
   const delta = direction === "next" ? 1 : -1;
   const { year, month } = shiftMonth(state.year, state.month, delta);
-  return rebuild(year, month, state.cursor, state.selectedDate, state.options);
+  return rebuildState(
+    year,
+    month,
+    state.cursor,
+    state.selectedDate,
+    state.options,
+  );
 }
 
 /** 前年/翌年へ移動する */
@@ -52,7 +36,7 @@ export function navigateYear(
   state: CalendarState,
   direction: MonthDirection,
 ): CalendarState {
-  return rebuild(
+  return rebuildState(
     state.year + (direction === "next" ? 1 : -1),
     state.month,
     state.cursor,
@@ -68,7 +52,7 @@ export function goToMonth(
   month: number,
 ): CalendarState {
   const normalized = shiftMonth(year, month, 0);
-  return rebuild(
+  return rebuildState(
     normalized.year,
     normalized.month,
     state.cursor,
@@ -82,30 +66,28 @@ export function goToDate(state: CalendarState, date: Date): CalendarState {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const monthData = buildMonthData(year, month, state.options);
-  return {
+  return rebuildState(
     year,
     month,
-    cursor: findDateCell(monthData, date),
-    selectedDate: state.selectedDate,
-    options: state.options,
+    findDateCell(monthData, date),
+    state.selectedDate,
+    state.options,
     monthData,
-  };
+  );
 }
 
 /** 今日の月へジャンプし、カーソルを今日のセルに置く */
 export function goToToday(state: CalendarState): CalendarState {
   const { today } = state.options;
-  const monthData = buildMonthData(
-    today.getFullYear(),
-    today.getMonth() + 1,
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const monthData = buildMonthData(year, month, state.options);
+  return rebuildState(
+    year,
+    month,
+    findTodayCell(monthData),
+    state.selectedDate,
     state.options,
-  );
-  return {
-    year: today.getFullYear(),
-    month: today.getMonth() + 1,
-    cursor: findTodayCell(monthData),
-    selectedDate: state.selectedDate,
-    options: state.options,
     monthData,
-  };
+  );
 }
