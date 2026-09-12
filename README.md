@@ -170,7 +170,7 @@ import type {
 ## Testing
 
 ```sh
-bun test
+pnpm test
 ```
 
 The suite covers date utilities (leap years, month boundaries), locale headers, grid layout, highlight/range rendering, and public API integration.
