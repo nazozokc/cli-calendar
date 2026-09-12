@@ -1,5 +1,5 @@
 {
-  "name": "@typescript-calendar/cli",
+  "name": "@typescript-calendar-lib/cli",
   "version": "0.1.1",
   "type": "module",
   "bin": {

@@ -1,0 +1,71 @@
+name: publish-core
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - name: Check release notes for publish target
+        id: check
+        env:
+          RELEASE_BODY: ${{ github.event.release.body }}
+        run: |
+          pkg="core"
+          line="$(printf '%s\n' "$RELEASE_BODY" | grep -iE '^[[:space:]]*publish[[:space:]]*:' | head -1)"
+          if [ -z "$line" ]; then
+            enabled=true
+          elif printf '%s\n' "$line" | grep -qiE "(^|[[:space:],])${pkg}([[:space:],]|$)"; then
+            enabled=true
+          else
+            enabled=false
+          fi
+          echo "enabled=${enabled}" >> "$GITHUB_OUTPUT"
+
+  publish-core:
+    needs: check
+    if: needs.check.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org/
+          cache: pnpm
+
+      - name: Get version from tag
+        id: version
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          version="${tag#v}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync package versions
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          for pkg in core cli tui react; do
+            pnpm --filter "@typescript-calendar-lib/${pkg}" pkg set "version=${version}"
+          done
+
+      - name: Publish
+        run: |
+          pnpm --filter "@typescript-calendar-lib/core" publish \
+            --no-git-checks \
+            --access public \
+            --registry https://registry.npmjs.org/
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
