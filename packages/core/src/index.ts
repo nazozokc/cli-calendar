@@ -20,3 +20,9 @@ export {
   isSameDay,
   lastDayOfMonth,
 } from "./utils.ts";
+export {
+  assertValidDate,
+  createDate,
+  MAX_YEAR,
+  MIN_YEAR,
+} from "./validation.ts";

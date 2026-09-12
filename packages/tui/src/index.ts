@@ -13,6 +13,7 @@ export {
   navigateMonth,
   navigateYear,
 } from "./navigation.ts";
+export { resolveOptions } from "./options.ts";
 export {
   findDateCell,
   findFirstDayCell,

@@ -12,7 +12,12 @@ export function colorize(
   return `\u001b[${code}m${text}\u001b[0m`;
 }
 
+/** ANSI エスケープシーケンスを除去した文字列を返す */
+export function stripAnsi(text: string): string {
+  return text.replace(ANSI_PATTERN, "");
+}
+
 /** ANSI エスケープシーケンスを除去した表示幅を返す */
 export function visibleWidth(text: string): number {
-  return text.replace(ANSI_PATTERN, "").length;
+  return stripAnsi(text).length;
 }

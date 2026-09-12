@@ -1,9 +1,13 @@
-import { visibleWidth } from "./ansi.ts";
+import { displayWidth } from "./align.ts";
+import { stripAnsi } from "./ansi.ts";
 import { renderMonth } from "./month.ts";
 import type { RenderMonthOptions } from "./types.ts";
 
 /**
  * 年間カレンダーを4列×3行でテキストで返す
+ *
+ * 列幅・パディングは「ANSI 除去後のターミナル表示幅」で計算する。
+ * 全角文字（日本語・韓国語・中国語の月名や曜日）も正しく揃う。
  */
 export function renderYear(
   year: number,
@@ -17,8 +21,9 @@ export function renderYear(
   const monthLines = months.map((m) => m.split("\n"));
   const maxLines = Math.max(...monthLines.map((l) => l.length));
 
+  const widthOf = (line: string): number => displayWidth(stripAnsi(line));
   const colWidths = monthLines.map((lines) =>
-    Math.max(...lines.map((l) => visibleWidth(l))),
+    Math.max(...lines.map((l) => widthOf(l))),
   );
 
   const result: string[] = [];
@@ -34,7 +39,7 @@ export function renderYear(
         }
         const lines = monthLines[monthIdx]!;
         const line = lines[lineIdx] ?? "";
-        const pad = Math.max(0, colWidths[monthIdx]! - visibleWidth(line));
+        const pad = Math.max(0, colWidths[monthIdx]! - widthOf(line));
         parts.push(line + " ".repeat(pad));
       }
       rowLines.push(parts.join("    "));

@@ -1,3 +1,4 @@
+import { assertValidDate } from "@typescript-calendar-lib/core";
 import type { CalendarStateOptions, ResolvedOptions } from "./types.ts";
 
 // ─── Options 解決 ─────────────────────────────────────────
@@ -7,6 +8,7 @@ export function resolveOptions(
   options: CalendarStateOptions = {},
 ): ResolvedOptions {
   const { today = new Date(), locale = "en", weekStart = "sunday" } = options;
+  assertValidDate(today);
   return {
     locale,
     weekStart,

@@ -29,6 +29,16 @@ describe("parseDate", () => {
     expect(parseDate("2026-9-8")).toBeNull();
     expect(parseDate("hello")).toBeNull();
   });
+
+  test("year 0000 は null（1900年代にずれない）", () => {
+    expect(parseDate("0000-06-15")).toBeNull();
+  });
+
+  test("year 0050 は正しくパース（1950年代にずれない）", () => {
+    const date = parseDate("0050-06-15");
+    expect(date).not.toBeNull();
+    expect(date!.getFullYear()).toBe(50);
+  });
 });
 
 describe("parseArgs", () => {

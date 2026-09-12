@@ -4,6 +4,7 @@ import type {
   Locale,
   WeekStart,
 } from "@typescript-calendar-lib/core";
+import { createDate } from "@typescript-calendar-lib/core";
 import { calendar } from "./calendar.ts";
 import type { ColorSchemeName, ThemeName } from "./theme.ts";
 
@@ -44,9 +45,10 @@ export function parseDate(value: string): Date | null {
   const year = Number(match[1]);
   const month = Number(match[2]);
   const day = Number(match[3]);
+  if (year < 1) return null;
   if (month < 1 || month > 12) return null;
   if (day < 1 || day > 31) return null;
-  const date = new Date(year, month - 1, day);
+  const date = createDate(year, month - 1, day);
   if (
     date.getFullYear() !== year ||
     date.getMonth() !== month - 1 ||

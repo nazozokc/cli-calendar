@@ -1,10 +1,12 @@
 import type { CalendarOptions } from "@typescript-calendar-lib/core";
 import {
   buildMonthGrid,
+  createDate,
   getMonthName,
   getWeekdayHeaders,
 } from "@typescript-calendar-lib/core";
 import type { CSSProperties } from "react";
+import { useMemo } from "react";
 import { getCellClasses } from "./cell-classes.ts";
 import type { CalendarSize } from "./size.ts";
 import { buildSizeStyle, isSizeName } from "./size.ts";
@@ -71,26 +73,39 @@ export function Calendar({
   onDateClick,
   onDateHover,
 }: CalendarProps) {
-  const monthName = getMonthName(locale, month);
-  const weekdays = getWeekdayHeaders(locale, weekStart);
-  const grid = buildMonthGrid(year, month, weekStart);
-
-  const resolvedTheme = resolveTheme(theme);
-  const cssVars = resolveColorScheme(colorScheme) as CSSProperties;
+  // 年月・ロケール・テーマは変更時のみ再計算する
+  const monthName = useMemo(() => getMonthName(locale, month), [locale, month]);
+  const weekdays = useMemo(
+    () => getWeekdayHeaders(locale, weekStart),
+    [locale, weekStart],
+  );
+  const grid = useMemo(
+    () => buildMonthGrid(year, month, weekStart),
+    [year, month, weekStart],
+  );
+  const resolvedTheme = useMemo(() => resolveTheme(theme), [theme]);
+  const cssVars = useMemo(
+    () => resolveColorScheme(colorScheme) as CSSProperties,
+    [colorScheme],
+  );
 
   const className = (day: number): string =>
-    getCellClasses(new Date(year, month - 1, day), { today, highlight, range });
+    getCellClasses(createDate(year, month - 1, day), {
+      today,
+      highlight,
+      range,
+    });
 
   const sizeClass = isSizeName(size) ? ` calendar-size-${size}` : "";
 
   const handleCellClick = (day: number) => {
     if (!interactive || !onDateClick) return;
-    onDateClick(new Date(year, month - 1, day));
+    onDateClick(createDate(year, month - 1, day));
   };
 
   const handleCellHover = (day: number) => {
     if (!interactive || !onDateHover) return;
-    onDateHover(new Date(year, month - 1, day));
+    onDateHover(createDate(year, month - 1, day));
   };
 
   return (
@@ -137,7 +152,7 @@ export function Calendar({
                         onClick={() => handleCellClick(day)}
                         onMouseEnter={() => handleCellHover(day)}
                         tabIndex={0}
-                        aria-label={`${getMonthName(locale, month)} ${day}, ${year}`}
+                        aria-label={`${monthName} ${day}, ${year}`}
                       >
                         {day}
                       </button>

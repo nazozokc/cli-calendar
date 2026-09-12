@@ -4,6 +4,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import { useCalendarState } from "./hooks.ts";
 import { Calendar } from "./index.tsx";
+import { isSizeName } from "./size.ts";
 
 const TODAY = new Date(2026, 8, 15); // 2026-09-15
 
@@ -213,5 +214,167 @@ describe("Calendar interactive", () => {
       }),
     );
     expect(container.firstChild).toHaveClass("calendar-interactive");
+  });
+});
+
+// ─── useCalendarState options 更新 ─────────────────────
+
+describe("useCalendarState options 更新", () => {
+  test("highlight の変更が状態に反映される", () => {
+    function Capture({ highlight }: { highlight?: Date }) {
+      const { state } = useCalendarState({
+        initialYear: 2026,
+        initialMonth: 9,
+        today: TODAY,
+        highlight,
+      });
+      return createElement(
+        "span",
+        { "data-testid": "highlight" },
+        state.options.highlight?.toISOString() ?? "none",
+      );
+    }
+    const first = new Date(2026, 8, 10);
+    const { rerender } = render(createElement(Capture, { highlight: first }));
+    expect(screen.getByTestId("highlight").textContent).toBe(
+      first.toISOString(),
+    );
+
+    const next = new Date(2026, 8, 11);
+    rerender(createElement(Capture, { highlight: next }));
+    expect(screen.getByTestId("highlight").textContent).toBe(
+      next.toISOString(),
+    );
+  });
+
+  test("同じ値の options で再レンダリングしても状態は再構築されない", () => {
+    const observed: unknown[] = [];
+    let highlight: Date | undefined = new Date(2026, 8, 10);
+    function Capture() {
+      const { state } = useCalendarState({
+        initialYear: 2026,
+        initialMonth: 9,
+        today: TODAY,
+        highlight,
+      });
+      observed.push(state);
+      return null;
+    }
+    const { rerender } = render(createElement(Capture));
+    // 新しいインスタンスだが同じ時刻 → 再構築されず state 参照が維持される
+    highlight = new Date(2026, 8, 10);
+    rerender(createElement(Capture));
+    expect(observed[1]).toBe(observed[0]);
+  });
+
+  test("値が変わると状態が再構築される", () => {
+    const observed: unknown[] = [];
+    let highlight: Date | undefined = new Date(2026, 8, 10);
+    function Capture() {
+      const { state } = useCalendarState({
+        initialYear: 2026,
+        initialMonth: 9,
+        today: TODAY,
+        highlight,
+      });
+      observed.push(state);
+      return null;
+    }
+    const { rerender } = render(createElement(Capture));
+    highlight = new Date(2026, 8, 11);
+    rerender(createElement(Capture));
+    // effect 後の再レンダリングで新 state が生成される
+    expect(observed.at(-1)).not.toBe(observed[0]);
+  });
+
+  test("range の変更が状態に反映される", () => {
+    function Capture({ range }: { range?: { from: Date; to: Date } }) {
+      const { state } = useCalendarState({
+        initialYear: 2026,
+        initialMonth: 9,
+        today: TODAY,
+        range,
+      });
+      const count = state.monthData.cells
+        .flat()
+        .filter((c) => c.isInRange).length;
+      return createElement("span", { "data-testid": "count" }, String(count));
+    }
+    const { rerender } = render(
+      createElement(Capture, {
+        range: { from: new Date(2026, 8, 1), to: new Date(2026, 8, 15) },
+      }),
+    );
+    expect(screen.getByTestId("count").textContent).toBe("15");
+
+    rerender(
+      createElement(Capture, {
+        range: { from: new Date(2026, 8, 1), to: new Date(2026, 8, 10) },
+      }),
+    );
+    expect(screen.getByTestId("count").textContent).toBe("10");
+  });
+
+  test("today の変更が状態に反映される", () => {
+    function Capture({ today }: { today: Date }) {
+      const { state } = useCalendarState({
+        initialYear: 2026,
+        initialMonth: 9,
+        today,
+      });
+      const todayCell = state.monthData.cells.flat().find((c) => c.isToday);
+      return createElement(
+        "span",
+        { "data-testid": "today" },
+        String(todayCell?.day ?? "none"),
+      );
+    }
+    const { rerender } = render(createElement(Capture, { today: TODAY }));
+    expect(screen.getByTestId("today").textContent).toBe("15");
+
+    rerender(createElement(Capture, { today: new Date(2026, 8, 20) }));
+    expect(screen.getByTestId("today").textContent).toBe("20");
+  });
+});
+
+// ─── Calendar の堅牢性 ─────────────────────────────────
+
+describe("Calendar の入力検証・正規化", () => {
+  test("逆転した range は正規化して範囲強調する", () => {
+    const { container } = render(
+      createElement(Calendar, {
+        year: 2026,
+        month: 9,
+        range: { from: new Date(2026, 8, 15), to: new Date(2026, 8, 1) },
+      }),
+    );
+    expect(container.querySelectorAll("td.is-in-range")).toHaveLength(15);
+  });
+
+  test("範囲外の month は RangeError（fail fast）", () => {
+    expect(() =>
+      render(createElement(Calendar, { year: 2026, month: 0 })),
+    ).toThrow(RangeError);
+  });
+
+  test("isSizeName は組み込みサイズ名のみ true", () => {
+    expect(isSizeName("sm")).toBe(true);
+    expect(isSizeName("md")).toBe(true);
+    expect(isSizeName("lg")).toBe(true);
+    expect(isSizeName("xl" as never)).toBe(false);
+    expect(isSizeName({ width: 48 })).toBe(false);
+  });
+
+  test("未知のサイズ名文字列でもクラッシュしない", () => {
+    const { container } = render(
+      createElement(Calendar, {
+        year: 2026,
+        month: 9,
+        size: "xl" as never,
+      }),
+    );
+    const root = container.firstChild as HTMLElement;
+    expect(root.className).not.toContain("calendar-size");
+    expect(root.querySelectorAll("td")).not.toHaveLength(0);
   });
 });
