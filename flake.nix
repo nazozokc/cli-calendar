@@ -22,6 +22,7 @@
           packages = with pkgs; [
             nodejs_22
             corepack
+            bun
             git
           ];
 

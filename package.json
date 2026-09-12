@@ -9,16 +9,19 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:dev": "bun --hot ./docs/server.ts",
+    "docs:build": "bun ./docs/build.ts",
+    "docs:preview": "cd docs/dist && NODE_ENV=production bun server.js"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.12",
+    "@lostgradient/bun-plugin-svelte": "^0.1.0",
     "@testing-library/jest-dom": "^7.0.1",
+    "@types/bun": "^1.4.2",
     "@vitest/coverage-v8": "^5.0.0",
+    "highlight.js": "^11.12.0",
+    "svelte": "^5.57.0",
     "typescript": "^7",
-    "vitepress": "^1.6.4",
     "vitest": "^5"
   },
   "workspaces": [

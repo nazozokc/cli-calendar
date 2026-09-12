@@ -22,5 +22,6 @@
     "paths": {
       "@typescript-calendar/core": ["./packages/core/src/index.ts"]
     }
-  }
+  },
+  "exclude": ["docs/dist"]
 }
