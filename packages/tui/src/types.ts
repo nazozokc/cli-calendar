@@ -1,4 +1,4 @@
-import type { Locale, WeekStart } from "@typescript-calendar/core";
+import type { Locale, WeekStart } from "@typescript-calendar-lib/core";
 
 // ─── Cell ────────────────────────────────────────────────
 

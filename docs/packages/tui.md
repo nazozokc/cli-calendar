@@ -1,13 +1,13 @@
-# @typescript-calendar/tui
+# @typescript-calendar-lib/tui
 
 Framework-agnostic, headless calendar data & state for building TUI calendars. No rendering — you get structured data (`MonthData`) and a state machine (`CalendarState`) that your TUI framework (Ink, React-Blessed, raw ANSI, etc.) consumes to draw pixels.
 
 ## Installation
 
 ```sh
-npm install @typescript-calendar/tui
+npm install @typescript-calendar-lib/tui
 # or
-bun add @typescript-calendar/tui
+bun add @typescript-calendar-lib/tui
 ```
 
 ## Concepts
@@ -24,7 +24,7 @@ State is **immutable**: every function returns a new `CalendarState` — perfect
 ### `buildMonthData(year, month, options?): MonthData`
 
 ```ts
-import { buildMonthData } from "@typescript-calendar/tui";
+import { buildMonthData } from "@typescript-calendar-lib/tui";
 
 const data = buildMonthData(2026, 9, { weekStart: "monday" });
 ```
@@ -75,7 +75,7 @@ interface MonthDataOptions {
 Initializes state. The cursor defaults to today's cell — or the first day cell if today isn't in the displayed month:
 
 ```ts
-import { createCalendarState } from "@typescript-calendar/tui";
+import { createCalendarState } from "@typescript-calendar-lib/tui";
 
 const state = createCalendarState({
   initialYear: 2026,
@@ -122,7 +122,7 @@ import {
   selectDate,
   getSelectedDate,
   clearSelection,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 ```
 
 ### `moveCursor(state, direction): CalendarState`
@@ -162,7 +162,7 @@ import {
   goToMonth,
   goToDate,
   goToToday,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 ```
 
 ### `navigateMonth(state, direction)`
@@ -188,7 +188,7 @@ Jump to today's month and place the cursor on today's cell.
 ### Search helpers
 
 ```ts
-import { findTodayCell, findDateCell, findFirstDayCell, clampCursor } from "@typescript-calendar/tui";
+import { findTodayCell, findDateCell, findFirstDayCell, clampCursor } from "@typescript-calendar-lib/tui";
 
 findTodayCell(monthData);    // { row, col } | null
 findDateCell(monthData, date); // { row, col } | null
@@ -264,7 +264,7 @@ import {
   moveCursor,
   navigateMonth,
   selectDate,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 
 let state = createCalendarState({ weekStart: "monday" });
 
@@ -310,7 +310,7 @@ import {
   selectDate,
   setCursorToDate,
   THEMES,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 
 import type {
   CalendarCell,
@@ -327,5 +327,5 @@ import type {
   ResolvedOptions,
   Theme,
   ThemeName,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 ```

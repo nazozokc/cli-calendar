@@ -1,4 +1,4 @@
-import { getMonthRange } from "@typescript-calendar/core";
+import { getMonthRange } from "@typescript-calendar-lib/core";
 import { renderMonth, renderYear } from "./render.ts";
 import type {
   CalendarOptions,

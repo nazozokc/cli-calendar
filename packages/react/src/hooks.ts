@@ -3,7 +3,7 @@ import type {
   CalendarStateOptions,
   Direction,
   MonthDirection,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 import {
   createCalendarState,
   getCursorDate,
@@ -13,7 +13,7 @@ import {
   goToToday as tuiGoToToday,
   moveCursor as tuiMoveCursor,
   selectDate as tuiSelectDate,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 import { useCallback, useMemo, useState } from "react";
 
 export interface UseCalendarStateOptions

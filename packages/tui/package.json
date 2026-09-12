@@ -26,7 +26,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@typescript-calendar/core": "workspace:*"
+    "@typescript-calendar-lib/core": "workspace:*"
   },
   "peerDependencies": {
     "typescript": "^5"

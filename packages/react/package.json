@@ -8,8 +8,8 @@
     "src"
   ],
   "dependencies": {
-    "@typescript-calendar/core": "workspace:*",
-    "@typescript-calendar/tui": "workspace:*"
+    "@typescript-calendar-lib/core": "workspace:*",
+    "@typescript-calendar-lib/tui": "workspace:*"
   },
   "devDependencies": {
     "@testing-library/react": "^16",

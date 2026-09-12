@@ -20,7 +20,7 @@ const PAGES: Record<string, string> = {
 };
 
 const path = normalizePath(window.location.pathname);
-document.title = TITLES[path] ?? "typescript-calendar";
+document.title = TITLES[path] ?? "typescript-calendar-lib";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("missing #root element");

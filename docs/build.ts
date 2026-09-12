@@ -15,8 +15,8 @@ if (!result.success) {
 }
 
 // GitHub Pages serves project sites under `/<repo>/`:
-// https://nazozokc.github.io/typescript-calendar/
-const PUBLISH_BASE = "/typescript-calendar";
+// https://nazozokc.github.io/typescript-calendar-lib/
+const PUBLISH_BASE = "/typescript-calendar-lib";
 
 // The HTML-import manifest references client assets with relative paths
 // (e.g. `./chunk-xyz.js`), which break on nested routes like `/packages/core`

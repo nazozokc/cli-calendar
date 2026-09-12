@@ -3,7 +3,7 @@ import type {
   CalendarRangeOptions as CoreCalendarRangeOptions,
   CalendarYearOptions as CoreCalendarYearOptions,
   RenderMonthOptions as CoreRenderMonthOptions,
-} from "@typescript-calendar/core";
+} from "@typescript-calendar-lib/core";
 import type {
   CliPalette,
   CliTheme,

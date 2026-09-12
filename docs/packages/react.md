@@ -1,25 +1,25 @@
-# @typescript-calendar/react
+# @typescript-calendar-lib/react
 
 A `<Calendar />` React component with CSS-based themes and color schemes, plus a `useCalendarState` hook for full interactivity. The component is fully controlled — you pass `year` and `month` and it renders the grid.
 
 > **Warning: Peer dependency** — Requires React 19. The package doesn't bundle React; install it in your app:
 >
 > ```sh
-> npm install react @typescript-calendar/react
+> npm install react @typescript-calendar-lib/react
 > ```
 
 ## Installation
 
 ```sh
-npm install @typescript-calendar/react
+npm install @typescript-calendar-lib/react
 # or
-bun add @typescript-calendar/react
+bun add @typescript-calendar-lib/react
 ```
 
 ## Quick Start
 
 ```tsx
-import { Calendar } from "@typescript-calendar/react";
+import { Calendar } from "@typescript-calendar-lib/react";
 
 export function App() {
   return (
@@ -79,7 +79,7 @@ Set `interactive` to make day cells clickable. Each cell becomes a focusable `ro
 For full interactivity (cursor movement, month navigation, selection), use the `useCalendarState` hook. It wraps the [`tui`](/packages/tui) state machine as React state:
 
 ```tsx
-import { Calendar, useCalendarState } from "@typescript-calendar/react";
+import { Calendar, useCalendarState } from "@typescript-calendar-lib/react";
 
 function App() {
   const {
@@ -256,7 +256,7 @@ import Calendar, {
   resolveTheme,
   THEMES,
   useCalendarState,
-} from "@typescript-calendar/react";
+} from "@typescript-calendar-lib/react";
 
 import type {
   CalendarCustomSize,
@@ -269,5 +269,5 @@ import type {
   ThemeName,
   UseCalendarStateOptions,
   UseCalendarStateReturn,
-} from "@typescript-calendar/react";
+} from "@typescript-calendar-lib/react";
 ```

@@ -11,7 +11,7 @@
 ### 完全な例
 
 ```tsx
-import { Calendar, useCalendarState } from "@typescript-calendar/react";
+import { Calendar, useCalendarState } from "@typescript-calendar-lib/react";
 
 export function CalendarDemo() {
   const {
@@ -73,7 +73,7 @@ export function CalendarDemo() {
 
 ```tsx
 import { useState } from "react";
-import { Calendar } from "@typescript-calendar/react";
+import { Calendar } from "@typescript-calendar-lib/react";
 
 function DatePicker() {
   const [date, setDate] = useState<Date | null>(null);
@@ -98,7 +98,7 @@ function DatePicker() {
 
 ```tsx
 import { useEffect } from "react";
-import { Calendar, useCalendarState } from "@typescript-calendar/react";
+import { Calendar, useCalendarState } from "@typescript-calendar-lib/react";
 
 function KeyboardCalendar() {
   const { state, moveCursor } = useCalendarState({});
@@ -140,7 +140,7 @@ import {
   navigateMonth,
   navigateYear,
   selectDate,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 
 let state = createCalendarState({ weekStart: "monday" });
 
@@ -171,7 +171,7 @@ import {
   findDateCell,
   findFirstDayCell,
   findTodayCell,
-} from "@typescript-calendar/tui";
+} from "@typescript-calendar-lib/tui";
 
 const data = state.monthData;
 const today = findTodayCell(data);                          // 今日のセル位置
@@ -186,22 +186,22 @@ CLI バイナリで一発表示:
 
 ```sh
 # 今月
-typescript-calendar
+typescript-calendar-lib
 
 # 2026年9月を日本語・月曜始まりで
-typescript-calendar 2026 9 --locale ja --week-start monday
+typescript-calendar-lib 2026 9 --locale ja --week-start monday
 
 # 今日をハイライト（[] で囲む）
-typescript-calendar --highlight "$(date +%Y-%m-%d)"
+typescript-calendar-lib --highlight "$(date +%Y-%m-%d)"
 
 # 反転表示 + 色付きで
-typescript-calendar 2026 9 --highlight 2026-09-08 --highlight-style reverse --color
+typescript-calendar-lib 2026 9 --highlight 2026-09-08 --highlight-style reverse --color
 ```
 
 ライブラリ API でも同じことができます:
 
 ```ts
-import { calendar } from "@typescript-calendar/cli";
+import { calendar } from "@typescript-calendar-lib/cli";
 
 const output = calendar({
   year: 2026,

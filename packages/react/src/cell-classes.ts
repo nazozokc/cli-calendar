@@ -1,4 +1,4 @@
-import { isDateInRange, isSameDay } from "@typescript-calendar/core";
+import { isDateInRange, isSameDay } from "@typescript-calendar-lib/core";
 
 // ─── セル状態クラス ───────────────────────────────────────
 

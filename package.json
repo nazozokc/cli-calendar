@@ -1,5 +1,5 @@
 {
-  "name": "typescript-calendar",
+  "name": "typescript-calendar-lib",
   "private": true,
   "packageManager": "pnpm@11.25.0",
   "scripts": {

@@ -1,9 +1,9 @@
-import type { CalendarOptions } from "@typescript-calendar/core";
+import type { CalendarOptions } from "@typescript-calendar-lib/core";
 import {
   buildMonthGrid,
   getMonthName,
   getWeekdayHeaders,
-} from "@typescript-calendar/core";
+} from "@typescript-calendar-lib/core";
 import type { CSSProperties } from "react";
 import { getCellClasses } from "./cell-classes.ts";
 import type { CalendarSize } from "./size.ts";

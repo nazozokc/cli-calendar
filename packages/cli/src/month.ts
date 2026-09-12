@@ -4,7 +4,7 @@ import {
   getWeekdayHeaders,
   isDateInRange,
   isSameDay,
-} from "@typescript-calendar/core";
+} from "@typescript-calendar-lib/core";
 import { centerText, centerTextFull, padStartWidth } from "./align.ts";
 import { colorize } from "./ansi.ts";
 import { bottomBorder, innerWidth, separatorRow, topBorder } from "./border.ts";

@@ -1,13 +1,13 @@
-# @typescript-calendar/cli
+# @typescript-calendar-lib/cli
 
 Render month, year, or date-range calendars as plain text — with optional ANSI colors, themes, and color schemes. Includes a command-line binary.
 
 ## Installation
 
 ```sh
-npm install @typescript-calendar/cli
+npm install @typescript-calendar-lib/cli
 # or
-bun add @typescript-calendar/cli
+bun add @typescript-calendar-lib/cli
 ```
 
 ## Rendering API
@@ -17,7 +17,7 @@ bun add @typescript-calendar/cli
 Render a single month:
 
 ```ts
-import { calendar } from "@typescript-calendar/cli";
+import { calendar } from "@typescript-calendar-lib/cli";
 
 console.log(calendar({ year: 2026, month: 9 }));
 ```
@@ -63,12 +63,12 @@ All options from [`core`](/packages/core) are supported, plus these CLI-specific
 
 ## CLI Binary
 
-The package ships a `typescript-calendar` binary:
+The package ships a `typescript-calendar-lib` binary:
 
 ```sh
-typescript-calendar                       # current month
-typescript-calendar 2026                  # current month of 2026
-typescript-calendar 2026 9                # September 2026
+typescript-calendar-lib                       # current month
+typescript-calendar-lib 2026                  # current month of 2026
+typescript-calendar-lib 2026 9                # September 2026
 ```
 
 ### Options
@@ -87,13 +87,13 @@ typescript-calendar 2026 9                # September 2026
 Example with `modern` theme and `ocean` color scheme:
 
 ```sh
-typescript-calendar 2026 9 --theme modern --color-scheme ocean --color
+typescript-calendar-lib 2026 9 --theme modern --color-scheme ocean --color
 ```
 
 Localized, Monday-start, with a highlighted date:
 
 ```sh
-typescript-calendar 2026 9 --locale ja --week-start monday --highlight 2026-09-08
+typescript-calendar-lib 2026 9 --locale ja --week-start monday --highlight 2026-09-08
 ```
 
 ## Themes
@@ -112,7 +112,7 @@ type ThemeName = "default" | "modern";
 Custom themes are plain objects:
 
 ```ts
-import type { CliTheme } from "@typescript-calendar/cli";
+import type { CliTheme } from "@typescript-calendar-lib/cli";
 
 const myTheme: CliTheme = {
   cellWidth: 4,
@@ -244,7 +244,7 @@ When a date is both highlighted and in range, the highlight takes precedence.
 By default (`color: false`) the output contains no ANSI escape codes, so it's safe to pipe into files or other tools:
 
 ```sh
-typescript-calendar 2026 9 > september.txt
+typescript-calendar-lib 2026 9 > september.txt
 ```
 
 ## Exports
@@ -258,7 +258,7 @@ import {
   resolveColorScheme,
   resolveTheme,
   THEMES,
-} from "@typescript-calendar/cli";
+} from "@typescript-calendar-lib/cli";
 
 import type {
   CalendarOptions,
@@ -270,5 +270,5 @@ import type {
   FrameChars,
   RenderMonthOptions,
   ThemeName,
-} from "@typescript-calendar/cli";
+} from "@typescript-calendar-lib/cli";
 ```

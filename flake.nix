@@ -1,5 +1,5 @@
 {
-  description = "typescript-calendar";
+  description = "typescript-calendar-lib";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";

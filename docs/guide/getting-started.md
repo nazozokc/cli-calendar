@@ -4,13 +4,13 @@
 
 ```sh
 # npm
-npm install @typescript-calendar/cli
+npm install @typescript-calendar-lib/cli
 
 # bun
-bun add @typescript-calendar/cli
+bun add @typescript-calendar-lib/cli
 
 # pnpm
-pnpm add @typescript-calendar/cli
+pnpm add @typescript-calendar-lib/cli
 ```
 
 Replace `cli` with the package you need: `core`, `cli`, `react`, or `tui`.
@@ -20,7 +20,7 @@ Replace `cli` with the package you need: `core`, `cli`, `react`, or `tui`.
 ### Plain Text (CLI package)
 
 ```ts
-import { calendar, calendarYear, calendarRange } from "@typescript-calendar/cli";
+import { calendar, calendarYear, calendarRange } from "@typescript-calendar-lib/cli";
 
 // Single month
 console.log(calendar({ year: 2026, month: 9 }));
@@ -56,7 +56,7 @@ calendar({ year: 2026, month: 9, locale: "es", weekStart: "monday" });
 ### React Component
 
 ```tsx
-import { Calendar } from "@typescript-calendar/react";
+import { Calendar } from "@typescript-calendar-lib/react";
 
 function App() {
   return <Calendar year={2026} month={9} colorScheme="ocean" />;
@@ -68,7 +68,7 @@ For interactivity (click, hover, cursor, month navigation), see the [Interactive
 ### TUI (Headless)
 
 ```ts
-import { createCalendarState, moveCursor, navigateMonth } from "@typescript-calendar/tui";
+import { createCalendarState, moveCursor, navigateMonth } from "@typescript-calendar-lib/tui";
 
 const state = createCalendarState({ year: 2026, month: 9 });
 const moved = moveCursor(state, "right");
@@ -93,7 +93,7 @@ core (zero dependencies)
  └── tui   (zero extra deps)
 ```
 
-All packages depend on `@typescript-calendar/core`. You can use any package independently, or compose them together.
+All packages depend on `@typescript-calendar-lib/core`. You can use any package independently, or compose them together.
 
 ## TypeScript
 
@@ -108,14 +108,14 @@ import type {
   Locale,
   WeekStart,
   HighlightStyle,
-} from "@typescript-calendar/cli";
+} from "@typescript-calendar-lib/cli";
 ```
 
 ## Development
 
 ```sh
-git clone https://github.com/nazozokc/typescript-calendar.git
-cd typescript-calendar
+git clone https://github.com/nazozokc/typescript-calendar-lib.git
+cd typescript-calendar-lib
 pnpm install
 pnpm test
 ```

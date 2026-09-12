@@ -1,4 +1,4 @@
-# typescript-calendar
+# typescript-calendar-lib
 
 A calendar library written in TypeScript. Render month, year, or arbitrary date-range calendars as plain text (with optional ANSI color) right in your terminal.
 
@@ -16,15 +16,15 @@ A calendar library written in TypeScript. Render month, year, or arbitrary date-
 ## Install
 
 ```sh
-bun add @typescript-calendar/cli
+bun add @typescript-calendar-lib/cli
 # or
-npm install @typescript-calendar/cli
+npm install @typescript-calendar-lib/cli
 ```
 
 ## Usage
 
 ```ts
-import { calendar, calendarYear, calendarRange } from "@typescript-calendar/cli";
+import { calendar, calendarYear, calendarRange } from "@typescript-calendar-lib/cli";
 
 // Month calendar
 console.log(calendar({ year: 2026, month: 9 }));
@@ -147,7 +147,7 @@ import type {
   Locale,
   WeekStart,
   HighlightStyle,
-} from "@typescript-calendar/cli";
+} from "@typescript-calendar-lib/cli";
 ```
 
 ## Testing

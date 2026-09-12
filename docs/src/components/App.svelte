@@ -11,7 +11,7 @@
 </script>
 
 <header class="site-header">
-  <a class="brand" href={withBase("/")}>typescript-calendar</a>
+  <a class="brand" href={withBase("/")}>typescript-calendar-lib</a>
   <nav class="site-nav">
     <a href={withBase("/guide/getting-started")}>Guide</a>
     <details class="dropdown">

@@ -1,4 +1,4 @@
-# @typescript-calendar/core
+# @typescript-calendar-lib/core
 
 Shared, framework-agnostic calendar utilities: date math, locale data, and grid building. Zero runtime dependencies.
 
@@ -7,9 +7,9 @@ Shared, framework-agnostic calendar utilities: date math, locale data, and grid 
 ## Installation
 
 ```sh
-npm install @typescript-calendar/core
+npm install @typescript-calendar-lib/core
 # or
-bun add @typescript-calendar/core
+bun add @typescript-calendar-lib/core
 ```
 
 ## Types
@@ -178,7 +178,7 @@ import type {
   Locale,
   RenderMonthOptions,
   WeekStart,
-} from "@typescript-calendar/core";
+} from "@typescript-calendar-lib/core";
 
 // Values
 import {
@@ -191,5 +191,5 @@ import {
   isDateInRange,
   isSameDay,
   lastDayOfMonth,
-} from "@typescript-calendar/core";
+} from "@typescript-calendar-lib/core";
 ```

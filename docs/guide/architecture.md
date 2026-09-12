@@ -1,6 +1,6 @@
 # Architecture
 
-typescript-calendar は 4 つのパッケージからなる monorepo です。すべてのパッケージが共有ロジックを持つ `core` に依存し、下位レイヤーほど汎用的、上位レイヤーほど具体的な出力を持ちます。
+typescript-calendar-lib は 4 つのパッケージからなる monorepo です。すべてのパッケージが共有ロジックを持つ `core` に依存し、下位レイヤーほど汎用的、上位レイヤーほど具体的な出力を持ちます。
 
 ## Dependency Graph
 
@@ -29,7 +29,7 @@ core (zero runtime dependencies)
 `core` は **状態を持ちません**。渡された値から純粋に計算し、文字列や配列を返すだけです。
 
 ```ts
-import { buildMonthGrid } from "@typescript-calendar/core";
+import { buildMonthGrid } from "@typescript-calendar-lib/core";
 
 const grid = buildMonthGrid(2026, 9, "sunday");
 // [ [null, null, 1, 2, 3, 4, 5], [6, 7, 8, ...], ... ]
@@ -45,7 +45,7 @@ const grid = buildMonthGrid(2026, 9, "sunday");
 すべての操作は**イミュータブル**です。`moveCursor(state, "right")` は元の `state` を変えず、新しい state を返します。これは React/TUI のレンダーループと相性が良い設計です。
 
 ```ts
-import { createCalendarState, moveCursor, navigateMonth } from "@typescript-calendar/tui";
+import { createCalendarState, moveCursor, navigateMonth } from "@typescript-calendar-lib/tui";
 
 let state = createCalendarState({ weekStart: "monday" });
 state = moveCursor(state, "right");       // → 新しい状態
@@ -63,7 +63,7 @@ state = navigateMonth(state, "next");     // → また新しい状態
 テーマ（枠線の有無）とカラースキーム（ANSI 色）は `theme.ts` に分離されており、`color: false`（既定）ならエスケープコードを含まない安全なプレーンテキストを返します。
 
 ```ts
-import { calendar } from "@typescript-calendar/cli";
+import { calendar } from "@typescript-calendar-lib/cli";
 
 console.log(calendar({ year: 2026, month: 9, theme: "modern", color: true }));
 ```
@@ -78,7 +78,7 @@ console.log(calendar({ year: 2026, month: 9, theme: "modern", color: true }));
 - `useCalendarState` — `tui` の状態マシンを包む hook。カーソル・選択・月移動を React 状態として管理
 
 ```tsx
-import { Calendar, useCalendarState } from "@typescript-calendar/react";
+import { Calendar, useCalendarState } from "@typescript-calendar-lib/react";
 
 function App() {
   const { state, goNext, goPrev, cursorDate } = useCalendarState({
@@ -106,7 +106,7 @@ function App() {
 | やりたいこと | 使うパッケージ |
 | :--- | :--- |
 | ターミナルにテキストで表示 | `cli` |
-| CLI ツールとして使う | `cli`（`typescript-calendar` バイナリ） |
+| CLI ツールとして使う | `cli`（`typescript-calendar-lib` バイナリ） |
 | Web アプリの部品にする | `react` |
 | Ink / blessed 等の TUI を自作する | `tui` |
 | 独自レンダラーを作る | `core` |

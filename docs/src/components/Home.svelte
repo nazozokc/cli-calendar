@@ -40,7 +40,7 @@ const FEATURES: Feature[] = [
 </script>
 
 <section class="hero">
-  <h1 class="hero-name">typescript-calendar</h1>
+  <h1 class="hero-name">typescript-calendar-lib</h1>
   <p class="hero-text">Type-safe calendar library</p>
   <p class="hero-tagline">
     Render month, year, or date-range calendars as plain text, React components,

@@ -8,17 +8,19 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-export const GITHUB_URL = "https://github.com/nazozokc/typescript-calendar";
+export const GITHUB_URL = "https://github.com/nazozokc/typescript-calendar-lib";
 
 /**
  * Base path of the docs site.
  *
  * GitHub Pages serves project sites under `/<repo>/`, so every link needs the
- * `/typescript-calendar` prefix there. The dev server (Bun.serve) serves from
+ * `/typescript-calendar-lib` prefix there. The dev server (Bun.serve) serves from
  * `/` and needs no prefix — detect which case we are in from the URL.
  */
-export const BASE = window.location.pathname.startsWith("/typescript-calendar")
-  ? "/typescript-calendar"
+export const BASE = window.location.pathname.startsWith(
+  "/typescript-calendar-lib",
+)
+  ? "/typescript-calendar-lib"
   : "";
 
 /** Prefix a docs-relative path (e.g. `/guide/getting-started`) with `BASE`. */
@@ -55,14 +57,14 @@ export const PACKAGES: NavItem[] = [
 
 /** Page title by URL path (used for <title>). */
 export const TITLES: Record<string, string> = {
-  "/": "typescript-calendar",
-  "/guide/getting-started": "Getting Started | typescript-calendar",
-  "/guide/interactive-demo": "Interactive Demo | typescript-calendar",
-  "/guide/architecture": "Architecture | typescript-calendar",
-  "/packages/core": "@typescript-calendar/core | typescript-calendar",
-  "/packages/cli": "@typescript-calendar/cli | typescript-calendar",
-  "/packages/react": "@typescript-calendar/react | typescript-calendar",
-  "/packages/tui": "@typescript-calendar/tui | typescript-calendar",
+  "/": "typescript-calendar-lib",
+  "/guide/getting-started": "Getting Started | typescript-calendar-lib",
+  "/guide/interactive-demo": "Interactive Demo | typescript-calendar-lib",
+  "/guide/architecture": "Architecture | typescript-calendar-lib",
+  "/packages/core": "@typescript-calendar-lib/core | typescript-calendar-lib",
+  "/packages/cli": "@typescript-calendar-lib/cli | typescript-calendar-lib",
+  "/packages/react": "@typescript-calendar-lib/react | typescript-calendar-lib",
+  "/packages/tui": "@typescript-calendar-lib/tui | typescript-calendar-lib",
 };
 
 /** Normalize an incoming pathname (strip `.html` suffix and the base path). */

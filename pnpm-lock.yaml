@@ -38,7 +38,7 @@ importers:
 
   packages/cli:
     dependencies:
-      '@typescript-calendar/core':
+      '@typescript-calendar-lib/core':
         specifier: workspace:*
         version: link:../core
       cli-table3:
@@ -56,10 +56,10 @@ importers:
 
   packages/react:
     dependencies:
-      '@typescript-calendar/core':
+      '@typescript-calendar-lib/core':
         specifier: workspace:*
         version: link:../core
-      '@typescript-calendar/tui':
+      '@typescript-calendar-lib/tui':
         specifier: workspace:*
         version: link:../tui
       react:
@@ -87,7 +87,7 @@ importers:
 
   packages/tui:
     dependencies:
-      '@typescript-calendar/core':
+      '@typescript-calendar-lib/core':
         specifier: workspace:*
         version: link:../core
       typescript:

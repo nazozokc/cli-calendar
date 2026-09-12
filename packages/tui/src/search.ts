@@ -1,4 +1,4 @@
-import { isSameDay } from "@typescript-calendar/core";
+import { isSameDay } from "@typescript-calendar-lib/core";
 import type { MonthData } from "./types.ts";
 
 // ─── セル検索 ────────────────────────────────────────────

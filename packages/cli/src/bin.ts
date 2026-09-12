@@ -3,7 +3,7 @@ import type {
   HighlightStyle,
   Locale,
   WeekStart,
-} from "@typescript-calendar/core";
+} from "@typescript-calendar-lib/core";
 import { calendar } from "./calendar.ts";
 import type { ColorSchemeName, ThemeName } from "./theme.ts";
 
@@ -183,11 +183,11 @@ export function parseArgs(args: readonly string[]): ParseResult {
 }
 
 export function printUsage(): string {
-  return `Usage: typescript-calendar [YYYY] [MM] [options]
+  return `Usage: typescript-calendar-lib [YYYY] [MM] [options]
 
-  typescript-calendar                       Render the current month
-  typescript-calendar 2026                  Render the current month of 2026
-  typescript-calendar 2026 9                Render September 2026
+  typescript-calendar-lib                       Render the current month
+  typescript-calendar-lib 2026                  Render the current month of 2026
+  typescript-calendar-lib 2026 9                Render September 2026
 
 Options:
   --theme <name>           Look: default | modern (default: default)

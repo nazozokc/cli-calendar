@@ -98,5 +98,5 @@ jobs:
       - name: Dry-run publish all packages
         run: |
           for pkg in cli tui react; do
-            pnpm --filter "@typescript-calendar/${pkg}" publish --dry-run --no-git-checks
+            pnpm --filter "@typescript-calendar-lib/${pkg}" publish --dry-run --no-git-checks
           done

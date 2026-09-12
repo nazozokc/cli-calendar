@@ -4,7 +4,7 @@ import {
   getWeekdayHeaders,
   isDateInRange,
   isSameDay,
-} from "@typescript-calendar/core";
+} from "@typescript-calendar-lib/core";
 import type { CalendarCell, MonthData, MonthDataOptions } from "./types.ts";
 
 /**
