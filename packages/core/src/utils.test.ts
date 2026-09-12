@@ -152,3 +152,109 @@ describe("getMonthRange", () => {
     ).toHaveLength(12);
   });
 });
+
+// ─── 入力検証 ─────────────────────────────────────────────
+
+describe("入力検証（不正入力は RangeError）", () => {
+  const invalidYears = [0, -1, NaN, Infinity, 10000, 2026.5];
+  const invalidMonths = [0, 13, -1, NaN, Infinity, 2.5];
+
+  test.each(invalidYears)("year %s は RangeError (firstDayOfMonth)", (y) => {
+    expect(() => firstDayOfMonth(y, 9)).toThrow(RangeError);
+  });
+
+  test.each(invalidMonths)("month %s は RangeError (firstDayOfMonth)", (m) => {
+    expect(() => firstDayOfMonth(2026, m)).toThrow(RangeError);
+  });
+
+  test.each(invalidYears)("year %s は RangeError (lastDayOfMonth)", (y) => {
+    expect(() => lastDayOfMonth(y, 9)).toThrow(RangeError);
+  });
+
+  test.each(invalidMonths)("month %s は RangeError (lastDayOfMonth)", (m) => {
+    expect(() => lastDayOfMonth(2026, m)).toThrow(RangeError);
+  });
+
+  test("文字列の year は RangeError", () => {
+    expect(() => firstDayOfMonth("2026" as unknown as number, 9)).toThrow(
+      RangeError,
+    );
+  });
+
+  test("year 0 は RangeError（0-99 の 1900 解釈を防ぐ）", () => {
+    expect(() => firstDayOfMonth(0, 9)).toThrow(RangeError);
+  });
+
+  test("不正な weekStart は RangeError", () => {
+    const invalid = ["tuesday", "", "Monday"] as never[];
+    for (const ws of invalid) {
+      expect(() => buildMonthGrid(2026, 9, ws)).toThrow(RangeError);
+    }
+  });
+
+  test("isDateInRange の from > to は RangeError", () => {
+    const date = new Date(2026, 8, 10);
+    const reversed = { from: new Date(2026, 8, 15), to: new Date(2026, 8, 1) };
+    expect(() => isDateInRange(date, reversed)).toThrow(RangeError);
+  });
+
+  test("isDateInRange の Invalid Date は RangeError", () => {
+    const invalid = new Date("invalid");
+    expect(() =>
+      isDateInRange(invalid, { from: new Date(), to: new Date() }),
+    ).toThrow(RangeError);
+    expect(() =>
+      isDateInRange(new Date(), { from: invalid, to: new Date() }),
+    ).toThrow(RangeError);
+    expect(() =>
+      isDateInRange(new Date(), { from: new Date(), to: invalid }),
+    ).toThrow(RangeError);
+  });
+
+  test("isSameDay の Invalid Date は RangeError", () => {
+    expect(() => isSameDay(new Date("invalid"), new Date())).toThrow(
+      RangeError,
+    );
+    expect(() => isSameDay(new Date(), new Date("invalid"))).toThrow(
+      RangeError,
+    );
+  });
+
+  test("getMonthRange の from > to は RangeError", () => {
+    expect(() =>
+      getMonthRange(new Date(2026, 8, 30), new Date(2026, 8, 1)),
+    ).toThrow(RangeError);
+  });
+
+  test("getMonthRange の Invalid Date は RangeError", () => {
+    expect(() => getMonthRange(new Date("invalid"), new Date())).toThrow(
+      RangeError,
+    );
+    expect(() => getMonthRange(new Date(), new Date("invalid"))).toThrow(
+      RangeError,
+    );
+  });
+});
+
+// ─── year 0-99 の扱い ────────────────────────────────────
+
+describe("year 0-99（JS Date の 1900 解釈バグを回避）", () => {
+  test("firstDayOfMonth(50, 9) は 50年9月1日", () => {
+    const date = firstDayOfMonth(50, 9);
+    expect(date.getFullYear()).toBe(50);
+    expect(date.getMonth()).toBe(8);
+    expect(date.getDate()).toBe(1);
+  });
+
+  test("lastDayOfMonth(24, 2) は 24年2月29日（うるう年）", () => {
+    const date = lastDayOfMonth(24, 2);
+    expect(date.getFullYear()).toBe(24);
+    expect(date.getDate()).toBe(29);
+  });
+
+  test("buildMonthGrid(50, 9) の grid が本来の曜日になる", () => {
+    // 50年9月1日は木曜日（1900年9月1日は土曜日と異なる）
+    const grid = buildMonthGrid(50, 9, "sunday");
+    expect(grid[0]).toEqual([null, null, null, null, 1, 2, 3]);
+  });
+});

@@ -7,6 +7,7 @@ import {
   goToToday,
   navigateMonth,
   navigateYear,
+  shiftMonth,
 } from "./navigation.ts";
 import { selectDate } from "./selection.ts";
 import { createCalendarState } from "./state.ts";
@@ -79,6 +80,22 @@ describe("navigateYear", () => {
     const prev = navigateYear(state, "prev");
     expect(prev.year).toBe(2025);
     expect(prev.month).toBe(9);
+  });
+
+  test("サポート範囲の端では移動しない", () => {
+    const min = createCalendarState({
+      today: TODAY,
+      initialYear: 1,
+      initialMonth: 1,
+    });
+    expect(navigateYear(min, "prev")).toBe(min);
+
+    const max = createCalendarState({
+      today: TODAY,
+      initialYear: 9999,
+      initialMonth: 12,
+    });
+    expect(navigateYear(max, "next")).toBe(max);
   });
 });
 
@@ -158,5 +175,29 @@ describe("ナビゲーションの入力検証", () => {
   test("shiftMonth の delta で正規化される", () => {
     expect(shiftMonth(2026, 12, 1)).toEqual({ year: 2027, month: 1 });
     expect(shiftMonth(2026, 1, -1)).toEqual({ year: 2025, month: 12 });
+  });
+});
+
+describe("navigateYear の年クランプ", () => {
+  test("year 1 で prev しても year 1 に留まる", () => {
+    const state = createCalendarState({ today: TODAY, initialYear: 1 });
+    const prev = navigateYear(state, "prev");
+    expect(prev.year).toBe(1);
+    expect(prev.month).toBe(9);
+    expect(prev.monthData.title).toBe("September 1");
+  });
+
+  test("year 9999 で next しても year 9999 に留まる", () => {
+    const state = createCalendarState({ today: TODAY, initialYear: 9999 });
+    const next = navigateYear(state, "next");
+    expect(next.year).toBe(9999);
+    expect(next.month).toBe(9);
+    expect(next.monthData.title).toBe("September 9999");
+  });
+
+  test("通常範囲では前年/翌年へ移動する", () => {
+    const state = createCalendarState({ today: TODAY });
+    expect(navigateYear(state, "next").year).toBe(2027);
+    expect(navigateYear(state, "prev").year).toBe(2025);
   });
 });

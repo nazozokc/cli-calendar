@@ -173,3 +173,26 @@ describe("getMonthName", () => {
     expect(getMonthName("zh", 12)).toBe("十二月");
   });
 });
+
+describe("getMonthName の入力検証", () => {
+  test.each([0, 13, -1, NaN, 2.5])("month %s は RangeError", (month) => {
+    expect(() => getMonthName("en", month)).toThrow(RangeError);
+  });
+
+  test("未知のロケールは RangeError", () => {
+    // @ts-expect-error 未対応ロケール
+    expect(() => getMonthName("xx", 9)).toThrow(RangeError);
+  });
+});
+
+describe("getWeekdayHeaders の入力検証", () => {
+  test("未知のロケールは RangeError", () => {
+    // @ts-expect-error 未対応ロケール
+    expect(() => getWeekdayHeaders("xx", "sunday")).toThrow(RangeError);
+  });
+
+  test("不正な weekStart は RangeError", () => {
+    // @ts-expect-error 未対応 weekStart
+    expect(() => getWeekdayHeaders("en", "tuesday")).toThrow(RangeError);
+  });
+});
