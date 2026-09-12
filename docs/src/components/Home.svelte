@@ -1,5 +1,5 @@
 <script lang="ts">
-import { GITHUB_URL } from "../nav";
+import { GITHUB_URL, withBase } from "../nav";
 
 interface Feature {
   title: string;
@@ -47,7 +47,7 @@ const FEATURES: Feature[] = [
     or headless TUI data. Zero runtime dependencies.
   </p>
   <div class="hero-actions">
-    <a class="btn btn-brand" href="/guide/getting-started">Get Started</a>
+    <a class="btn btn-brand" href={withBase("/guide/getting-started")}>Get Started</a>
     <a class="btn btn-alt" href={GITHUB_URL} target="_blank" rel="noreferrer"
       >View on GitHub</a
     >
