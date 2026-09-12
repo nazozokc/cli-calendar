@@ -38,14 +38,11 @@ export function buildMonthData(
   assertValidDate(today);
   if (highlight !== undefined) assertValidDate(highlight);
 
-  let normalizedRange = range;
+  const normalizedRange = range;
   if (range !== undefined) {
     assertValidDate(range.from);
     assertValidDate(range.to);
-    // from > to は範囲指定の逆転として扱い、正規化する
-    if (range.from.getTime() > range.to.getTime()) {
-      normalizedRange = { from: range.to, to: range.from };
-    }
+    // from > to の逆転 range は不正入力として RangeError（isDateInRange が投げる）
   }
 
   const title = `${getMonthName(locale, nm)} ${ny}`;

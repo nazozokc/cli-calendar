@@ -340,15 +340,16 @@ describe("useCalendarState options 更新", () => {
 // ─── Calendar の堅牢性 ─────────────────────────────────
 
 describe("Calendar の入力検証・正規化", () => {
-  test("逆転した range は正規化して範囲強調する", () => {
-    const { container } = render(
-      createElement(Calendar, {
-        year: 2026,
-        month: 9,
-        range: { from: new Date(2026, 8, 15), to: new Date(2026, 8, 1) },
-      }),
-    );
-    expect(container.querySelectorAll("td.is-in-range")).toHaveLength(15);
+  test("逆転した range は RangeError", () => {
+    expect(() =>
+      render(
+        createElement(Calendar, {
+          year: 2026,
+          month: 9,
+          range: { from: new Date(2026, 8, 15), to: new Date(2026, 8, 1) },
+        }),
+      ),
+    ).toThrow(RangeError);
   });
 
   test("範囲外の month は RangeError（fail fast）", () => {
