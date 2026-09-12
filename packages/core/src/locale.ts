@@ -1,4 +1,5 @@
 import type { Locale, WeekStart } from "./types.ts";
+import { assertValidMonth, assertValidWeekStart } from "./validation.ts";
 
 export interface LocaleData {
   months: readonly string[];
@@ -151,14 +152,26 @@ export const LOCALES: Record<Locale, LocaleData> = {
   },
 };
 
+/** ロケールデータを取得する（未知のロケールは RangeError） */
+function getLocaleData(locale: Locale): LocaleData {
+  const data = LOCALES[locale];
+  if (data === undefined) {
+    throw new RangeError(`Invalid locale: "${locale}"`);
+  }
+  return data;
+}
+
 export function getWeekdayHeaders(
   locale: Locale,
   weekStart: WeekStart,
 ): readonly string[] {
-  const data = LOCALES[locale];
+  assertValidWeekStart(weekStart);
+  const data = getLocaleData(locale);
   return weekStart === "monday" ? data.weekdaysMonday : data.weekdays;
 }
 
 export function getMonthName(locale: Locale, month: number): string {
-  return LOCALES[locale].months[month - 1]!;
+  assertValidMonth(month);
+  const data = getLocaleData(locale);
+  return data.months[month - 1]!;
 }

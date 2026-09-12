@@ -1,5 +1,6 @@
 import { clampCursor } from "./cursor.ts";
 import { buildMonthData } from "./month-data.ts";
+import { shiftMonth } from "./month-math.ts";
 import { resolveOptions } from "./options.ts";
 import { findFirstDayCell, findTodayCell } from "./search.ts";
 import type {
@@ -15,13 +16,17 @@ import type {
  * カレンダー状態を初期化する。
  *
  * カーソルはデフォルトで「今日」のセル、今日が当月に無ければ最初の日付セルに置かれる。
+ * `initialYear`/`initialMonth` は shiftMonth で正規化される（例: month=13 → 翌年1月）。
  */
 export function createCalendarState(
   options: CalendarStateOptions = {},
 ): CalendarState {
   const resolved = resolveOptions(options);
-  const year = options.initialYear ?? resolved.today.getFullYear();
-  const month = options.initialMonth ?? resolved.today.getMonth() + 1;
+  const { year, month } = shiftMonth(
+    options.initialYear ?? resolved.today.getFullYear(),
+    options.initialMonth ?? resolved.today.getMonth() + 1,
+    0,
+  );
 
   const monthData = buildMonthData(year, month, resolved);
   const cursor = clampCursor(

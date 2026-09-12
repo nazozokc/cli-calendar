@@ -132,7 +132,24 @@ calendar({
 
 When a date is both highlighted and in range, the highlight takes precedence.
 
+`range.from` must not be after `range.to` — a reversed range throws a `RangeError` in every layer (`core`, the CLI, `buildMonthData`, and React).
+
 By default (`color: false`) the output is clean plain text with no ANSI escape codes, so it's safe to pipe into files or other tools.
+
+## Input validation
+
+All APIs validate their inputs and throw `RangeError` on invalid values instead of silently producing wrong results. An out-of-range `month` passed to high-level APIs (`calendar()`, `buildMonthData`, the React component) rolls over (e.g. month `13` → January of the next year); every other invalid input is rejected:
+
+- `year`: integer `1`–`9999` (`0`, `-1`, `10000`, `2026.5`, `NaN` are rejected)
+- `month`: integer `1`–`12` (`0`, `13`, `2.5`, `NaN` are rejected)
+- `locale`: one of `en | ja | es | de | fr | ko | zh`
+- `weekStart`: `"sunday" | "monday"`
+- `range`: `from <= to`; a reversed or invalid range throws `RangeError` in every layer
+- dates: `highlight`, `today`, `range.from`, `range.to`, and `calendarRange`'s `from`/`to` must be valid `Date`s
+
+> **Note:** JavaScript's `new Date(year, ...)` interprets years `0`–`99` as `1900 + year`. This
+> library builds dates with `setFullYear` internally, so years below `100` are handled correctly —
+> but years `0` and `10000` are out of range and rejected.
 
 ## TypeScript
 

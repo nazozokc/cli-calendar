@@ -3,17 +3,26 @@ import type { CalendarState, Direction, MonthData } from "./types.ts";
 
 // ─── カーソル位置 ────────────────────────────────────────
 
-/** カーソルを行数・列数の範囲にクランプする */
+/** カーソルを行数・列数の範囲にクランプする。NaN/非整数は null を返す */
 export function clampCursor(
   cursor: { row: number; col: number } | null,
   monthData: MonthData,
 ): { row: number; col: number } | null {
   if (cursor === null) return null;
-  const maxRow = Math.max(0, monthData.visibleRows - 1);
-  const maxCol = Math.max(0, (monthData.cells[0]?.length ?? 7) - 1);
+  if (!Number.isFinite(cursor.row) || !Number.isFinite(cursor.col)) return null;
+
+  const row = Math.floor(cursor.row);
+  const col = Math.floor(cursor.col);
+
+  const cols = monthData.cells[0]?.length;
+  if (monthData.visibleRows <= 0 || cols === undefined || cols <= 0)
+    return null;
+
+  const maxRow = monthData.visibleRows - 1;
+  const maxCol = cols - 1;
   return {
-    row: Math.max(0, Math.min(cursor.row, maxRow)),
-    col: Math.max(0, Math.min(cursor.col, maxCol)),
+    row: Math.max(0, Math.min(row, maxRow)),
+    col: Math.max(0, Math.min(col, maxCol)),
   };
 }
 
@@ -25,6 +34,8 @@ export function moveCursor(
   const monthData = state.monthData;
   const rows = monthData.visibleRows;
   const cols = monthData.cells[0]?.length ?? 7;
+
+  if (rows <= 0 || cols <= 0) return state;
 
   let cursor = state.cursor;
   if (cursor === null) {

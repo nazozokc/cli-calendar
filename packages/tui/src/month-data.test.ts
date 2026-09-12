@@ -114,3 +114,89 @@ describe("buildMonthData", () => {
     expect(days).not.toContain(28 + 1);
   });
 });
+
+describe("buildMonthData の入力検証・正規化", () => {
+  test("month 13 は翌年1月に正規化される", () => {
+    const data = buildMonthData(2026, 13, { today: TODAY });
+    expect(data.year).toBe(2027);
+    expect(data.month).toBe(1);
+    expect(data.title).toBe("January 2027");
+    const days = data.cells
+      .flat()
+      .map((c) => c.day)
+      .filter((d): d is number => d !== null);
+    expect(Math.max(...days)).toBe(31);
+  });
+
+  test("month 0 は前年12月に正規化される", () => {
+    const data = buildMonthData(2026, 0, { today: TODAY });
+    expect(data.year).toBe(2025);
+    expect(data.month).toBe(12);
+    expect(data.title).toBe("December 2025");
+  });
+
+  test("不正な year は RangeError", () => {
+    expect(() => buildMonthData(NaN, 9)).toThrow(RangeError);
+    expect(() => buildMonthData(Infinity, 9)).toThrow(RangeError);
+    expect(() => buildMonthData(2026.5, 9)).toThrow(RangeError);
+  });
+
+  test("不正な month は RangeError", () => {
+    expect(() => buildMonthData(2026, NaN)).toThrow(RangeError);
+    expect(() => buildMonthData(2026, Infinity)).toThrow(RangeError);
+    expect(() => buildMonthData(2026, 2.5)).toThrow(RangeError);
+  });
+
+  test("未対応のロケールは RangeError", () => {
+    // @ts-expect-error 未対応ロケール
+    expect(() => buildMonthData(2026, 9, { locale: "xx" })).toThrow(RangeError);
+  });
+
+  test("未対応の weekStart は RangeError", () => {
+    // @ts-expect-error 未対応 weekStart
+    expect(() => buildMonthData(2026, 9, { weekStart: "xx" })).toThrow(
+      RangeError,
+    );
+  });
+
+  test("Invalid Date の today は RangeError", () => {
+    expect(() =>
+      buildMonthData(2026, 9, { today: new Date("invalid") }),
+    ).toThrow(RangeError);
+  });
+
+  test("Invalid Date の highlight は RangeError", () => {
+    expect(() =>
+      buildMonthData(2026, 9, { highlight: new Date("invalid") }),
+    ).toThrow(RangeError);
+  });
+
+  test("Invalid Date の range は RangeError", () => {
+    expect(() =>
+      buildMonthData(2026, 9, {
+        range: { from: new Date("invalid"), to: new Date(2026, 8, 5) },
+      }),
+    ).toThrow(RangeError);
+    expect(() =>
+      buildMonthData(2026, 9, {
+        range: { from: new Date(2026, 8, 1), to: new Date("invalid") },
+      }),
+    ).toThrow(RangeError);
+  });
+
+  test("from > to の range は RangeError", () => {
+    expect(() =>
+      buildMonthData(2026, 9, {
+        today: TODAY,
+        range: { from: new Date(2026, 8, 15), to: new Date(2026, 8, 1) },
+      }),
+    ).toThrow(RangeError);
+  });
+
+  test("year 1-99 のセル日付が正しく生成される（1900年解釈しない）", () => {
+    const data = buildMonthData(50, 9);
+    const cell = data.cells[0]!.find((c) => c.day !== null)!;
+    expect(cell.date!.getFullYear()).toBe(50);
+    expect(cell.date!.getMonth()).toBe(8);
+  });
+});

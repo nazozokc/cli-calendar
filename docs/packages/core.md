@@ -152,9 +152,11 @@ lastDayOfMonth(2028, 2); // Tue Feb 29 2028 (leap year)
 
 Returns `true` if `date` falls within `range` (inclusive). Returns `false` when `range` is `undefined`.
 
+Throws `RangeError` when `range.from` is after `range.to`, or when any date is invalid.
+
 ### `isSameDay(a, b): boolean`
 
-Compares dates by year, month, and day only (ignores time component).
+Compares dates by year, month, and day only (ignores time component). Throws `RangeError` when either date is invalid.
 
 ### `getMonthRange(from, to): { year: number; month: number }[]`
 
@@ -165,6 +167,25 @@ getMonthRange(new Date(2026, 5, 1), new Date(2026, 8, 30));
 // [{ year: 2026, month: 6 }, { year: 2026, month: 7 },
 //  { year: 2026, month: 8 }, { year: 2026, month: 9 }]
 ```
+
+Throws `RangeError` when `from` is after `to`, or when either date is invalid.
+
+## Input validation
+
+All functions validate their inputs and throw `RangeError` on invalid values instead of silently
+producing wrong results:
+
+| Input | Accepted range | Example of invalid input |
+| :--- | :--- | :--- |
+| `year` | integer `1`–`9999` | `0`, `-1`, `10000`, `2026.5`, `NaN` |
+| `month` | integer `1`–`12` | `0`, `13`, `2.5`, `NaN` |
+| `weekStart` | `"sunday"` \| `"monday"` | `"tuesday"` |
+| `locale` | `"en"` \| `"ja"` \| `"es"` \| `"de"` \| `"fr"` \| `"ko"` \| `"zh"` | `"xx"` |
+| `range` | `from <= to`, valid `Date`s | reversed or invalid dates |
+
+> **Note:** `new Date(year, ...)` interprets years `0`–`99` as `1900 + year`. The library avoids
+> this by using `setFullYear` internally (`createDate`), so `firstDayOfMonth(50, 9)` correctly
+> returns the year `50` — but you still cannot pass year `0` or `10000`.
 
 ## Exports
 
@@ -183,7 +204,11 @@ import type {
 // Values
 import {
   LOCALES,
+  MAX_YEAR,
+  MIN_YEAR,
+  assertValidDate,
   buildMonthGrid,
+  createDate,
   firstDayOfMonth,
   getMonthName,
   getMonthRange,
@@ -193,3 +218,16 @@ import {
   lastDayOfMonth,
 } from "@typescript-calendar-lib/core";
 ```
+
+### `createDate(year, monthIndex, day): Date`
+
+Creates a local `Date` at `00:00:00` without the `new Date(year, ...)` 1900-interpretation for
+years `0`–`99`. `monthIndex` is 0-based like `Date`.
+
+### `assertValidDate(date): void`
+
+Throws `RangeError` when `date` is not a `Date` instance or is an `Invalid Date`.
+
+### `MIN_YEAR` / `MAX_YEAR`
+
+The supported year range (`1` / `9999`). Values outside this range are rejected by validation.
