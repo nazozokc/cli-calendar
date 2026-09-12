@@ -184,14 +184,13 @@ describe("buildMonthData の入力検証・正規化", () => {
     ).toThrow(RangeError);
   });
 
-  test("from > to の range は正規化される", () => {
-    const data = buildMonthData(2026, 9, {
-      today: TODAY,
-      range: { from: new Date(2026, 8, 15), to: new Date(2026, 8, 1) },
-    });
-    const inRange = data.cells.flat().filter((c) => c.isInRange);
-    expect(inRange).toHaveLength(15);
-    expect(inRange.every((c) => c.day! >= 1 && c.day! <= 15)).toBe(true);
+  test("from > to の range は RangeError", () => {
+    expect(() =>
+      buildMonthData(2026, 9, {
+        today: TODAY,
+        range: { from: new Date(2026, 8, 15), to: new Date(2026, 8, 1) },
+      }),
+    ).toThrow(RangeError);
   });
 
   test("year 1-99 のセル日付が正しく生成される（1900年解釈しない）", () => {
