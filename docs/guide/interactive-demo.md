@@ -6,6 +6,8 @@
 
 `useCalendarState` と `<Calendar interactive />` を組み合わせると、月移動・カーソル・選択が一つの状態で完結します。
 
+`onDateClick` / `onDateHover` は日付を通知するだけで、`useCalendarState` の状態は更新しません。選択状態を更新するのは `selectDate()` で、引数は取らず**現在のカーソル位置**の日付を `selectedDate` に設定します。上の例では別の Select ボタンから呼んでいます。
+
 ### 完全な例
 
 ```tsx
@@ -92,7 +94,7 @@ function DatePicker() {
 
 ### キーボード操作
 
-`interactive` モードのセルは `role="button"` としてフォーカス可能で、Enter / Space でクリックと同じ動作をします。また、`useCalendarState` の `moveCursor` に矢印キーを割り当てるのが一般的なパターンです。
+`interactive` モードの日付セルは内部にネイティブの `<button>` を持つためフォーカス可能で、Enter / Space でクリックと同じ動作をします。また、`useCalendarState` の `moveCursor` に矢印キーを割り当てるのが一般的なパターンです。
 
 ```tsx
 import { useEffect } from "react";
