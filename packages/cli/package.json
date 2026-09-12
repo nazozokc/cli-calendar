@@ -5,6 +5,10 @@
   "bin": {
     "typescript-calendar-lib": "src/bin.ts"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nazozokc/typescript-calendar-lib"
+  },
   "main": "src/index.ts",
   "types": "src/index.ts",
   "files": [
