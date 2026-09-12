@@ -24,12 +24,17 @@ const PUBLISH_BASE = "/typescript-calendar";
 // base-prefixed paths in the emitted HTML.
 const htmlPath = "./docs/dist/index.html";
 const html = await Bun.file(htmlPath).text();
-await Bun.write(
-  htmlPath,
-  html.replace(
-    /((?:src|href)=")\.\/([^"]+\.(?:js|css))"/g,
-    `$1${PUBLISH_BASE}/$2"`,
-  ),
+const rewritten = html.replace(
+  /((?:src|href)=")\.\/([^"]+\.(?:js|css))"/g,
+  `$1${PUBLISH_BASE}/$2"`,
 );
+await Bun.write(htmlPath, rewritten);
+
+// GitHub Pages has no SPA fallback: a direct hit on `/packages/react` (or a
+// nav click, since links are plain <a href>) 404s. Serve the same shell as
+// 404.html, which GitHub Pages returns for any unknown path — the client then
+// renders the page from `location.pathname`. This is the standard trick for
+// static GitHub Pages SPAs.
+await Bun.write("./docs/dist/404.html", rewritten);
 
 console.log(`docs build: ${result.outputs.length} outputs -> docs/dist/`);
